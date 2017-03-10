@@ -60,11 +60,11 @@ namespace Game
 
     bool TicTacToe::init()
     {
-        const unsigned int sizePlayers = mGameParams.players.size();
+        const size_t sizePlayers = mGameParams.players.size();
         game_fatal_assert(sizePlayers >= 2);
 
         mPlayers.resize(sizePlayers);
-        for (unsigned int i = 0; i < sizePlayers; ++i)
+        for (size_t i = 0; i < sizePlayers; ++i)
         {
             mPlayers[i].setSymbolOwned(PlayerSymbolMapping::instance().player(i).mSymbol);
             mPlayers[i].setHuman(mGameParams.players.at(i));

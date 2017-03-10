@@ -38,7 +38,7 @@ namespace Game
         mMap[5] = Info(Symbol::Minus,   0xffffff00);
     }
 
-    const PlayerSymbolMapping::Info & PlayerSymbolMapping::player(unsigned int playerIndex) const
+    const PlayerSymbolMapping::Info & PlayerSymbolMapping::player(size_t playerIndex) const
     {
         game_fatal_assert(playerIndex < PLAYER_MAP_SIZE);
         return mMap[playerIndex];

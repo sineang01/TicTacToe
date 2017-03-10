@@ -40,7 +40,7 @@ namespace Game
             Info(Symbol symbol, unsigned int ARGB):mSymbol(symbol),mARGB(ARGB) {}
         };
 
-        const Info & player(unsigned int playerIndex) const;
+        const Info & player(size_t playerIndex) const;
 
     private:
         PlayerSymbolMapping();

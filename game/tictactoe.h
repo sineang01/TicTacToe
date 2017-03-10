@@ -87,10 +87,10 @@ namespace Game
     private:
         const GameParams & mGameParams;
 
-        typedef std::vector<Cell> CellList;
+        using CellList = std::vector<Cell>;
         CellList mBoard;
 
-        typedef std::vector<Player> PlayerList;
+        using PlayerList = std::vector<Player>;
         PlayerList mPlayers;
 
         unsigned int mCurrentPlayer;

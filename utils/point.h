@@ -61,10 +61,10 @@ namespace Utils
 
     // -------------------------------------------------------------
 
-    typedef Point<unsigned int> PointUInt;
-    typedef Point<int> PointInt;
-    typedef Point<float> PointFloat;
-    typedef Point<double> PointDouble;
+		using PointUInt = Point<unsigned int>;
+		using PointInt = Point<int>;
+		using PointFloat = Point<float>;
+		using PointDouble = Point<double>;
 
     // -------------------------------------------------------------
 

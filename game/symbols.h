@@ -39,7 +39,7 @@ namespace Game
 
     inline char printSymbol(Symbol type)
     {
-        typedef std::underlying_type<Symbol>::type utype;
+        using utype = std::underlying_type<Symbol>::type;
         return static_cast<utype>(type);
     }
 
