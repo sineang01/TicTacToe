@@ -19,7 +19,9 @@
 
 #pragma once
 #include <string>
+#include <cstring>
 #include <iostream>
+#include <stdio>
 #include "tictactoe.hpp"
 
 namespace Game {
@@ -30,7 +32,7 @@ namespace Game {
 		{
 			static char buffer[512];
 
-			memset(buffer, 0, sizeof(buffer));
+			std::memset(buffer, 0, sizeof(buffer));
 			sprintf_s(buffer, "%s [%u-%u]: ", text, min, max);
 
 			std::string input;
