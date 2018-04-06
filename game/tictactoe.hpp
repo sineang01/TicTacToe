@@ -18,9 +18,9 @@
 ****************************************************************************************/
 
 #pragma once
-#include "cell.h"
-#include "player.h"
-#include "../utils/utils.h"
+#include "cell.hpp"
+#include "player.hpp"
+#include "../utils/utils.hpp"
 #include <vector>
 #include <algorithm>
 

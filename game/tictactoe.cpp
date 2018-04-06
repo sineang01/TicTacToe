@@ -19,8 +19,8 @@
 
 #include "stdafx.h"
 
-#include "tictactoe.h"
-#include "mapping.h"
+#include "tictactoe.hpp"
+#include "mapping.hpp"
 
 #include <sstream>
 #include <string>

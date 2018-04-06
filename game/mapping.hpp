@@ -18,42 +18,41 @@
 ****************************************************************************************/
 
 #pragma once
-#include "symbols.h"
-#include "player.h"
+#include "symbols.hpp"
+#include <vector>
 
 namespace Game
 {
 
-	/**
-	 * @brief The Cell class is the container of a single cell grid for TicTacToe
-	 */
-	class Cell final
+	class PlayerSymbolMapping final
 	{
 	public:
-		Cell() :mpPlayer(nullptr), mLocked(false) {}
+		static inline PlayerSymbolMapping & instance();
 
-		void setFree() { mpPlayer = nullptr; mLocked = false; }
-		bool free() const { return !mpPlayer && !mLocked; }
+		struct Info
+		{
+			Symbol mSymbol;
+			unsigned int mARGB;
 
-		void setOwner(const Player * pPlayer) { mpPlayer = pPlayer; }
-		const Player * owner() const { return mpPlayer; }
+			Info() :mSymbol(Symbol::None), mARGB(0) {}
+			Info(Symbol symbol, unsigned int ARGB) :mSymbol(symbol), mARGB(ARGB) {}
+		};
 
-		inline void setLocked(bool locked) { mLocked = locked; }
-		inline bool locked() const { return mLocked; }
-
-		inline Symbol symbol() const;
+		const Info & player(size_t playerIndex) const;
 
 	private:
-		const Player * mpPlayer;
-		bool mLocked;
+		PlayerSymbolMapping();
+		~PlayerSymbolMapping() {}
+
+	private:
+		static const unsigned int PLAYER_MAP_SIZE;
+		std::vector<Info> mMap;
 	};
 
-	Symbol Cell::symbol() const
+	PlayerSymbolMapping & PlayerSymbolMapping::instance()
 	{
-		if (mpPlayer)
-			return mpPlayer->symbolOwned();
-
-		return mLocked ? Symbol::Unavaiable : Symbol::None;
+		static PlayerSymbolMapping mapping;
+		return mapping;
 	}
 
 } // namespace Game

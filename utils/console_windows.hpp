@@ -18,39 +18,35 @@
 ****************************************************************************************/
 
 #pragma once
-#include "symbols.h"
+#ifdef _WIN32
 
-namespace Game
+#include "point.hpp"
+#include "console_abstract.hpp"
+#include <string>
+
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN 
+#include <Windows.h>
+
+namespace Utils
 {
 
-	class Player final
+	class ConsoleWindows final : public ConsoleAbstract
 	{
 	public:
-		Player() :mSymbol(Symbol::None), mScore(0), mClass(Class::Human) {}
-		~Player() {}
+		ConsoleWindows();
+		~ConsoleWindows();
 
-		inline void setSymbolOwned(Symbol type) { mSymbol = type; }
-		inline Symbol symbolOwned() const { return mSymbol; }
-
-		inline void increaseScore() { ++mScore; }
-		inline void resetScore() { mScore = 0; }
-		inline unsigned int score() const { return mScore; }
-
-		void setHuman(bool human) { mClass = human ? Class::Human : Class::AI; }
-		bool human() const { return mClass == Class::Human; }
-		bool ai() const { return mClass == Class::AI; }
+		bool write(char character, const Utils::PointUInt & coordinate) override final;
+		bool write(const std::string & text, const PointUInt &coordinate, bool clearLine = true) override final;
+		bool clear(const Utils::PointUInt & coordinate, unsigned int length = 0) override final;
+		bool cursorAt(const Utils::PointUInt & coordinate) override final;
+		Utils::PointUInt size() const override final;
 
 	private:
-		enum class Class
-		{
-			Human,
-			AI
-		};
-
-	private:
-		Symbol mSymbol;
-		unsigned int mScore;
-		Class mClass;
+		HANDLE mHandle;
 	};
 
-} // namespace Game
+} // namespace Utils
+
+#endif // _WIN32

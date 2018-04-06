@@ -19,8 +19,8 @@
 
 #include "stdafx.h"
 
-#include "mapping.h"
-#include "../utils/utils.h"
+#include "mapping.hpp"
+#include "../utils/utils.hpp"
 
 namespace Game
 {

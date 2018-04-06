@@ -20,8 +20,8 @@
 #include "stdafx.h"
 #ifdef _WIN32
 
-#include "console_windows.h"
-#include "utils.h"
+#include "console_windows.hpp"
+#include "utils.hpp"
 
 namespace Utils
 {

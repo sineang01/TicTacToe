@@ -1,5 +1,5 @@
-#include "console.h"
-#include "console_windows.h"
+#include "console.hpp"
+#include "console_windows.hpp"
 
 namespace Utils
 {

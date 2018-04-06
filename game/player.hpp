@@ -18,37 +18,39 @@
 ****************************************************************************************/
 
 #pragma once
+#include "symbols.hpp"
 
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-
-#include "point.h"
-#include "console.h"
-
-#ifdef _DEBUG
-#include <cassert>
-#define game_assert(condition) { assert(condition); }
-#define game_fatal_assert(condition) { if (!(condition)) { assert(condition); throw; } }
-#else
-#define game_assert(condition) {}
-#define game_fatal_assert(condition) {  if (!(condition)) throw; }
-#endif
-
-namespace Utils
+namespace Game
 {
 
-	inline void initRandomize()
+	class Player final
 	{
-		std::srand(static_cast<unsigned int>(std::time(0)));
-	}
+	public:
+		Player() :mSymbol(Symbol::None), mScore(0), mClass(Class::Human) {}
+		~Player() {}
 
-	/**
-	 * @brief Returns a value between 0 and max (excluded)
-	 */
-	inline int randomize(unsigned int max = RAND_MAX)
-	{
-		return std::rand() % max;
-	}
+		inline void setSymbolOwned(Symbol type) { mSymbol = type; }
+		inline Symbol symbolOwned() const { return mSymbol; }
 
-} // namespace Utils
+		inline void increaseScore() { ++mScore; }
+		inline void resetScore() { mScore = 0; }
+		inline unsigned int score() const { return mScore; }
+
+		void setHuman(bool human) { mClass = human ? Class::Human : Class::AI; }
+		bool human() const { return mClass == Class::Human; }
+		bool ai() const { return mClass == Class::AI; }
+
+	private:
+		enum class Class
+		{
+			Human,
+			AI
+		};
+
+	private:
+		Symbol mSymbol;
+		unsigned int mScore;
+		Class mClass;
+	};
+
+} // namespace Game

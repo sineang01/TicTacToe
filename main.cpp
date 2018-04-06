@@ -18,9 +18,9 @@
 ****************************************************************************************/
 
 #include "stdafx.h"
-#include "game/tictactoe.h"
-#include "game/mapping.h"
-#include "utils/utils.h"
+#include "game/tictactoe.hpp"
+#include "game/mapping.hpp"
+#include "utils/utils.hpp"
 #include <iostream>
 
 template <typename T>

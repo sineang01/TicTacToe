@@ -1,5 +1,5 @@
 #pragma once
-#include "console_abstract.h"
+#include "console_abstract.hpp"
 
 namespace Utils
 {

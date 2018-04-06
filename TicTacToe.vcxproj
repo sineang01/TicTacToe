@@ -158,17 +158,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="game\cell.h" />
-    <ClInclude Include="game\mapping.h" />
-    <ClInclude Include="game\player.h" />
-    <ClInclude Include="game\symbols.h" />
-    <ClInclude Include="game\tictactoe.h" />
+    <ClInclude Include="game\cell.hpp" />
+    <ClInclude Include="game\mapping.hpp" />
+    <ClInclude Include="game\player.hpp" />
+    <ClInclude Include="game\symbols.hpp" />
+    <ClInclude Include="game\tictactoe.hpp" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="utils\console.h" />
-    <ClInclude Include="utils\console_windows.h" />
-    <ClInclude Include="utils\console_abstract.h" />
-    <ClInclude Include="utils\point.h" />
-    <ClInclude Include="utils\utils.h" />
+    <ClInclude Include="utils\console.hpp" />
+    <ClInclude Include="utils\console_windows.hpp" />
+    <ClInclude Include="utils\console_abstract.hpp" />
+    <ClInclude Include="utils\point.hpp" />
+    <ClInclude Include="utils\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game\mapping.cpp" />

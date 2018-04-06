@@ -30,34 +30,34 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game\cell.h">
+    <ClInclude Include="game\cell.hpp">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="game\mapping.h">
+    <ClInclude Include="game\mapping.hpp">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="game\player.h">
+    <ClInclude Include="game\player.hpp">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="game\symbols.h">
+    <ClInclude Include="game\symbols.hpp">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="game\tictactoe.h">
+    <ClInclude Include="game\tictactoe.hpp">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="utils\utils.h">
+    <ClInclude Include="utils\console.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils\point.h">
+    <ClInclude Include="utils\console_abstract.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils\console_abstract.h">
+    <ClInclude Include="utils\console_windows.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils\console_windows.h">
+    <ClInclude Include="utils\point.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils\console.h">
+    <ClInclude Include="utils\utils.hpp">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>

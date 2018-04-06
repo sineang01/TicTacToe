@@ -18,35 +18,37 @@
 ****************************************************************************************/
 
 #pragma once
-#ifdef _WIN32
 
-#include "point.h"
-#include "console_abstract.h"
-#include <string>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN 
-#include <Windows.h>
+#include "point.hpp"
+#include "console.hpp"
+
+#ifdef _DEBUG
+#include <cassert>
+#define game_assert(condition) { assert(condition); }
+#define game_fatal_assert(condition) { if (!(condition)) { assert(condition); throw; } }
+#else
+#define game_assert(condition) {}
+#define game_fatal_assert(condition) {  if (!(condition)) throw; }
+#endif
 
 namespace Utils
 {
 
-	class ConsoleWindows final : public ConsoleAbstract
+	inline void initRandomize()
 	{
-	public:
-		ConsoleWindows();
-		~ConsoleWindows();
+		std::srand(static_cast<unsigned int>(std::time(0)));
+	}
 
-		bool write(char character, const Utils::PointUInt & coordinate) override final;
-		bool write(const std::string & text, const PointUInt &coordinate, bool clearLine = true) override final;
-		bool clear(const Utils::PointUInt & coordinate, unsigned int length = 0) override final;
-		bool cursorAt(const Utils::PointUInt & coordinate) override final;
-		Utils::PointUInt size() const override final;
-
-	private:
-		HANDLE mHandle;
-	};
+	/**
+	 * @brief Returns a value between 0 and max (excluded)
+	 */
+	inline int randomize(unsigned int max = RAND_MAX)
+	{
+		return std::rand() % max;
+	}
 
 } // namespace Utils
-
-#endif // _WIN32
