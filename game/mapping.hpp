@@ -18,25 +18,28 @@
 ****************************************************************************************/
 
 #pragma once
-#include <vector>
+#include <array>
+#include <cstring>
 #include "symbols.hpp"
 
 namespace Game {
 
+	static constexpr unsigned int PLAYER_MAP_SIZE = 6;
+
 	class PlayerSymbolMapping final
 	{
 	public:
-		static inline PlayerSymbolMapping & instance();
-
 		struct Info
 		{
-			Symbol mSymbol;
-			unsigned int mARGB;
+			Symbol mSymbol = Symbol::None;
+			unsigned int mRGB = 0;
 
-			Info() :mSymbol(Symbol::None), mARGB(0) {}
-			Info(Symbol symbol, unsigned int ARGB) :mSymbol(symbol), mARGB(ARGB) {}
+			Info() {}
+			Info(Symbol symbol, unsigned int rgb) : mSymbol(symbol), mRGB(rgb) {}
 		};
 
+	public:
+		static inline PlayerSymbolMapping & instance();
 		const Info & player(size_t playerIndex) const;
 
 	private:
@@ -44,8 +47,7 @@ namespace Game {
 		~PlayerSymbolMapping() {}
 
 	private:
-		static const unsigned int PLAYER_MAP_SIZE;
-		std::vector<Info> mMap;
+		std::array<Info, PLAYER_MAP_SIZE> mMap;
 	};
 
 	PlayerSymbolMapping & PlayerSymbolMapping::instance()

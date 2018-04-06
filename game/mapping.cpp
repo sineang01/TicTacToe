@@ -23,17 +23,15 @@
 
 namespace Game {
 
-	const unsigned int PlayerSymbolMapping::PLAYER_MAP_SIZE = 6;
-
 	PlayerSymbolMapping::PlayerSymbolMapping()
 	{
-		mMap.resize(PLAYER_MAP_SIZE);
-		mMap[0] = Info(Symbol::Cross, 0xffff0000);
-		mMap[1] = Info(Symbol::Circle, 0xff0000ff);
-		mMap[2] = Info(Symbol::Tilde, 0xff00ff00);
-		mMap[3] = Info(Symbol::At, 0xffff00ff);
-		mMap[4] = Info(Symbol::Plus, 0xff00ffff);
-		mMap[5] = Info(Symbol::Minus, 0xffffff00);
+		mMap[0] = Info(Symbol::Cross, 0xff0000);
+		mMap[1] = Info(Symbol::Circle, 0x0000ff);
+		mMap[2] = Info(Symbol::Tilde, 0x00ff00);
+		mMap[3] = Info(Symbol::At, 0xff00ff);
+		mMap[4] = Info(Symbol::Plus, 0x00ffff);
+		mMap[5] = Info(Symbol::Minus, 0xffff00);
+		//mMap size == PLAYER_MAP_SIZE
 	}
 
 	const PlayerSymbolMapping::Info & PlayerSymbolMapping::player(size_t playerIndex) const

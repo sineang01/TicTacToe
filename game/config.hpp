@@ -19,7 +19,9 @@
 
 #pragma once
 #include <string>
+#include <cstring>
 #include <iostream>
+#include <sstream>
 #include "tictactoe.hpp"
 
 namespace Game {
@@ -28,17 +30,15 @@ namespace Game {
 		template <typename T>
 		void waitNumericInput(const char * text, T min, T max, T & output)
 		{
-			static char buffer[512];
-
-			memset(buffer, 0, sizeof(buffer));
-			sprintf_s(buffer, "%s [%u-%u]: ", text, min, max);
+			std::ostringstream buffer;
+			buffer << text << " [" << min << "-" << max << "]: ";
 
 			std::string input;
 			char inputChar = 0;
 
 			do
 			{
-				std::cout << buffer;
+				std::cout << buffer.str();
 				std::cin >> input;
 
 				inputChar = input.at(0);
@@ -46,7 +46,7 @@ namespace Game {
 			} while (!isdigit(inputChar) || output < min || output > max);
 		}
 
-		void waitBooleanInput(const char * text, bool & output);
+		void waitBooleanInput(const std::string & text, bool & output);
 		void config(TicTacToe::GameParams & params);
 
 	} // namespace Config
