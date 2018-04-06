@@ -23,21 +23,20 @@
 
 namespace Game {
 
+	struct PlayerSymbolInfo
+	{
+		Symbol mSymbol = Symbol::None;
+		unsigned int mRGB = 0;
+
+		PlayerSymbolInfo() {}
+		PlayerSymbolInfo(Symbol symbol, unsigned int rgb) : mSymbol(symbol), mRGB(rgb) {}
+	};
+
 	class PlayerSymbolMapping final
 	{
 	public:
 		static inline PlayerSymbolMapping & instance();
-
-		struct Info
-		{
-			Symbol mSymbol;
-			unsigned int mARGB;
-
-			Info() :mSymbol(Symbol::None), mARGB(0) {}
-			Info(Symbol symbol, unsigned int ARGB) :mSymbol(symbol), mARGB(ARGB) {}
-		};
-
-		const Info & player(size_t playerIndex) const;
+		const PlayerSymbolInfo & player(size_t playerIndex) const;
 
 	private:
 		PlayerSymbolMapping();
@@ -45,7 +44,7 @@ namespace Game {
 
 	private:
 		static const unsigned int PLAYER_MAP_SIZE;
-		std::vector<Info> mMap;
+		std::vector<PlayerSymbolInfo> mMap;
 	};
 
 	PlayerSymbolMapping & PlayerSymbolMapping::instance()

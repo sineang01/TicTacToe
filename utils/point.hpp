@@ -46,7 +46,7 @@ namespace Utils {
 		template <class Y> friend inline bool operator!=(const Point<T> & p1, const Point<T> & p2);
 		template <class Y> friend inline const Point<T> operator+(const Point<T> & p1, const Point<T> & p2);
 		template <class Y> friend inline const Point<T> operator-(const Point<T> & p1, const Point<T> & p2);
-		template <class Y> friend inline const Point<T> operator*(T, const Point<T> & p);
+		template <class Y> friend inline const Point<T> operator*(T c, const Point<T> & p);
 		template <class Y> friend inline const Point<T> operator*(const Point<T> &, T c);
 		template <class Y> friend inline const Point<T> operator+(const Point<T> & p);
 		template <class Y> friend inline const Point<T> operator-(const Point<T> &);
@@ -75,7 +75,7 @@ namespace Utils {
 	}
 
 	template <typename T>
-	Point<T> &Point<T>::operator-=(const Point & p)
+	Point<T> & Point<T>::operator-=(const Point & p)
 	{
 		mX -= p.mX;
 		mY -= p.mY;
@@ -83,10 +83,18 @@ namespace Utils {
 	}
 
 	template <typename T>
-	Point<T> &Point<T>::operator*=(T c)
+	Point<T> & Point<T>::operator*=(T c)
 	{
 		mX *= c;
 		mY *= c;
+		return *this;
+	}
+
+	template <typename T>
+	Point<T> & Point<T>::operator/=(T divisor)
+	{
+		mX /= divisor;
+		mY /= divisor;
 		return *this;
 	}
 
@@ -103,19 +111,25 @@ namespace Utils {
 	}
 
 	template <typename T>
-	bool operator+(const Point<T> & p1, const Point<T> & p2)
+	const Point<T> operator+(const Point<T> & p1, const Point<T> & p2)
 	{
 		return Point<T>(p1.mX + p2.mX, p1.mY + p2.mY);
 	}
 
 	template <typename T>
-	bool operator-(const Point<T> & p1, const Point<T> & p2)
+	const Point<T> operator-(const Point<T> & p1, const Point<T> & p2)
 	{
 		return Point<T>(p1.mX - p2.mX, p1.mY - p2.mY);
 	}
 
 	template <typename T>
-	bool operator*(const Point<T> & p, T c)
+	const Point<T> operator*(T c, const Point<T> & p)
+	{
+		return Point<T>(p.mX * c, p.mY * c);
+	}
+
+	template <typename T>
+	const Point<T> operator*(const Point<T> & p, T c)
 	{
 		return Point<T>(p.mX * c, p.mY * c);
 	}
@@ -124,14 +138,6 @@ namespace Utils {
 	const Point<T> operator+(const Point<T> & p)
 	{
 		return p;
-	}
-
-	template <typename T>
-	Point<T> & Point<T>::operator/=(T divisor)
-	{
-		mX /= divisor;
-		mY /= divisor;
-		return *this;
 	}
 
 	template <typename T>
