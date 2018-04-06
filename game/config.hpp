@@ -46,7 +46,7 @@ namespace Game {
 			} while (!isdigit(inputChar) || output < min || output > max);
 		}
 
-		void waitBooleanInput(std::string & text, bool & output);
+		void waitBooleanInput(const std::string & text, bool & output);
 		void config(TicTacToe::GameParams & params);
 
 	} // namespace Config

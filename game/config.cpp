@@ -23,7 +23,7 @@
 namespace Game {
 	namespace Config {
 
-		void waitBooleanInput(std::string & text, bool & output)
+		void waitBooleanInput(const std::string & text, bool & output)
 		{
 			std::string input;
 			char inputChar = 0;
