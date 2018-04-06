@@ -166,8 +166,8 @@ namespace Game {
 
 	void TicTacToe::displayPlayerInfo() const
 	{
-		const PlayerList::size_type playersSize = mPlayers.size();
-		for (PlayerList::size_type i = 0; i < playersSize; ++i)
+		const size_t playersSize = mPlayers.size();
+		for (size_t i = 0; i < playersSize; ++i)
 		{
 			std::ostringstream ss;
 			ss << "Player" << i + 1 << " (" << printSymbol(mPlayers.at(i).symbolOwned()) << ") - Score: " << mPlayers.at(i).score();
@@ -327,7 +327,7 @@ namespace Game {
 		auto writeTimedMessage = [](const std::string & text, const Utils::PointUInt & coordinate) -> void
 		{
 			Utils::Console::instance()->write(text, coordinate);
-			std::this_thread::sleep_for(std::chrono::milliseconds(10/*TIMER_AI_THINKING_MSECS*/));
+			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_AI_THINKING_MSECS));
 		};
 
 		static const std::string s = "AI doing its best";
