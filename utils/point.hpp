@@ -19,8 +19,7 @@
 
 #pragma once
 
-namespace Utils
-{
+namespace Utils {
 
 	template <typename T>
 	class Point final

@@ -18,11 +18,10 @@
 ****************************************************************************************/
 
 #pragma once
-#include "symbols.hpp"
 #include <vector>
+#include "symbols.hpp"
 
-namespace Game
-{
+namespace Game {
 
 	class PlayerSymbolMapping final
 	{

@@ -20,8 +20,7 @@
 #pragma once
 #include "symbols.hpp"
 
-namespace Game
-{
+namespace Game {
 
 	class Player final
 	{

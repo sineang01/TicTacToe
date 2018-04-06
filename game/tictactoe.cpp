@@ -19,17 +19,16 @@
 
 #include "stdafx.h"
 
-#include "tictactoe.hpp"
-#include "mapping.hpp"
-
 #include <sstream>
 #include <string>
 #include <thread>
 #include <chrono>
 #include <iostream>
 
-namespace Game
-{
+#include "tictactoe.hpp"
+#include "mapping.hpp"
+
+namespace Game {
 
 	const unsigned int TicTacToe::BOARD_CELL_WIDTH = 5;
 	const unsigned int TicTacToe::BOARD_CELL_HEIGHT = 3;
@@ -328,7 +327,7 @@ namespace Game
 		auto writeTimedMessage = [](const std::string & text, const Utils::PointUInt & coordinate) -> void
 		{
 			Utils::Console::instance()->write(text, coordinate);
-			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_AI_THINKING_MSECS));
+			std::this_thread::sleep_for(std::chrono::milliseconds(10/*TIMER_AI_THINKING_MSECS*/));
 		};
 
 		static const std::string s = "AI doing its best";

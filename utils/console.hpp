@@ -20,8 +20,7 @@
 #pragma once
 #include "console_abstract.hpp"
 
-namespace Utils
-{
+namespace Utils {
 
 	class Console final
 	{

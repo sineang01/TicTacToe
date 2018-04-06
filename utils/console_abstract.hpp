@@ -21,8 +21,7 @@
 #include "point.hpp"
 #include <string>
 
-namespace Utils
-{
+namespace Utils {
 
 	struct ConsoleAbstract
 	{

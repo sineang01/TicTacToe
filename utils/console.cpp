@@ -21,8 +21,7 @@
 #include "console.hpp"
 #include "console_windows.hpp"
 
-namespace Utils
-{
+namespace Utils {
 
 	ConsoleAbstract * Console::m_pConsole = nullptr;
 

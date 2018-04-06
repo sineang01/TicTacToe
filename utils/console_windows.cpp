@@ -18,13 +18,12 @@
 ****************************************************************************************/
 
 #include "stdafx.h"
-#ifdef _WIN32
-
-#include "console_windows.hpp"
 #include "utils.hpp"
 
-namespace Utils
-{
+#ifdef _WIN32
+#include "console_windows.hpp"
+
+namespace Utils {
 
 	ConsoleWindows::ConsoleWindows()
 		:mHandle(GetStdHandle(STD_OUTPUT_HANDLE))

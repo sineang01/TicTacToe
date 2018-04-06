@@ -21,8 +21,7 @@
 #include "symbols.hpp"
 #include "player.hpp"
 
-namespace Game
-{
+namespace Game {
 
 	/**
 	 * @brief The Cell class is the container of a single cell grid for TicTacToe

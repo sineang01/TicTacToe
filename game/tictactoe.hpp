@@ -18,14 +18,13 @@
 ****************************************************************************************/
 
 #pragma once
+#include <vector>
+#include <algorithm>
 #include "cell.hpp"
 #include "player.hpp"
 #include <utils.hpp>
-#include <vector>
-#include <algorithm>
 
-namespace Game
-{
+namespace Game {
 
 	class TicTacToe final
 	{

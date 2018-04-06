@@ -18,12 +18,10 @@
 ****************************************************************************************/
 
 #include "stdafx.h"
-
 #include "mapping.hpp"
 #include <utils.hpp>
 
-namespace Game
-{
+namespace Game {
 
 	const unsigned int PlayerSymbolMapping::PLAYER_MAP_SIZE = 6;
 

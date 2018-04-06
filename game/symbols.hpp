@@ -20,8 +20,7 @@
 #pragma once
 #include <type_traits>
 
-namespace Game
-{
+namespace Game {
 
 	enum class Symbol : char
 	{
