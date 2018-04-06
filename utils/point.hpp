@@ -42,15 +42,15 @@ namespace Utils {
 		inline Point<T> &operator*=(T c);
 		inline Point<T> &operator/=(T c);
 
-		friend inline bool operator==(const Point<T> & p1, const Point<T> & p2);
-		friend inline bool operator!=(const Point<T> & p1, const Point<T> & p2);
-		friend inline const Point<T> operator+(const Point<T> & p1, const Point<T> & p2);
-		friend inline const Point<T> operator-(const Point<T> & p1, const Point<T> & p2);
-		friend inline const Point<T> operator*(T, const Point<T> & p);
-		friend inline const Point<T> operator*(const Point<T> &, T c);
-		friend inline const Point<T> operator+(const Point<T> & p);
-		friend inline const Point<T> operator-(const Point<T> &);
-		friend inline const Point<T> operator/(const Point<T> & p, T divisor);
+		template <class Y> friend inline bool operator==(const Point<T> & p1, const Point<T> & p2);
+		template <class Y> friend inline bool operator!=(const Point<T> & p1, const Point<T> & p2);
+		template <class Y> friend inline const Point<T> operator+(const Point<T> & p1, const Point<T> & p2);
+		template <class Y> friend inline const Point<T> operator-(const Point<T> & p1, const Point<T> & p2);
+		template <class Y> friend inline const Point<T> operator*(T, const Point<T> & p);
+		template <class Y> friend inline const Point<T> operator*(const Point<T> &, T c);
+		template <class Y> friend inline const Point<T> operator+(const Point<T> & p);
+		template <class Y> friend inline const Point<T> operator-(const Point<T> &);
+		template <class Y> friend inline const Point<T> operator/(const Point<T> & p, T divisor);
 
 	private:
 		T mX;
