@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016 Simone Angeloni
+** Copyright (C) 2016-2018 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -18,6 +18,9 @@
 ****************************************************************************************/
 
 #pragma once
-#include "targetver.h"
-#include <stdio.h>
-#include <tchar.h>
+
+#ifdef _WIN32
+#  include <SDKDDKVer.h>
+#  include <stdio.h>
+#  include <tchar.h>
+#endif

@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016 Simone Angeloni
+** Copyright (C) 2016-2018 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,8 +17,7 @@
 **
 ****************************************************************************************/
 
-#ifndef UTILS_H
-#define UTILS_H
+#pragma once
 
 #include <iostream>
 #include <cstdlib>
@@ -39,19 +38,17 @@
 namespace Utils
 {
 
-    inline void initRandomize()
-    {
-        std::srand(static_cast<unsigned int>(std::time(0)));
-    }
+	inline void initRandomize()
+	{
+		std::srand(static_cast<unsigned int>(std::time(0)));
+	}
 
-    /**
-     * @brief Returns a value between 0 and max (excluded)
-     */
-    inline int randomize(unsigned int max = RAND_MAX)
-    {
-        return std::rand() % max;
-    }
+	/**
+	 * @brief Returns a value between 0 and max (excluded)
+	 */
+	inline int randomize(unsigned int max = RAND_MAX)
+	{
+		return std::rand() % max;
+	}
 
 } // namespace Utils
-
-#endif // UTILS_H

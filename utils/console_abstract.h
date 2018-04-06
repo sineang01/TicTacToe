@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016 Simone Angeloni
+** Copyright (C) 2016-2018 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -18,4 +18,21 @@
 ****************************************************************************************/
 
 #pragma once
-#include <SDKDDKVer.h>
+#include "point.h"
+#include <string>
+
+namespace Utils
+{
+
+	struct ConsoleAbstract
+	{
+		virtual ~ConsoleAbstract() {}
+
+		virtual bool write(char character, const Utils::PointUInt & coordinate) = 0;
+		virtual bool write(const std::string & text, const PointUInt &coordinate, bool clearLine = true) = 0;
+		virtual bool clear(const Utils::PointUInt & coordinate, unsigned int length = 0) = 0;
+		virtual bool cursorAt(const Utils::PointUInt & coordinate) = 0;
+		virtual Utils::PointUInt size() const = 0;
+	};
+
+} // namespace Utils

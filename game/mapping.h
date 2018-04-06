@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016 Simone Angeloni
+** Copyright (C) 2016-2018 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,46 +17,42 @@
 **
 ****************************************************************************************/
 
-#ifndef MAPPING_H
-#define MAPPING_H
-
+#pragma once
 #include "symbols.h"
 #include <vector>
 
 namespace Game
 {
 
-    class PlayerSymbolMapping final
-    {
-    public:
-        static inline PlayerSymbolMapping & instance();
+	class PlayerSymbolMapping final
+	{
+	public:
+		static inline PlayerSymbolMapping & instance();
 
-        struct Info
-        {
-            Symbol mSymbol;
-            unsigned int mARGB;
+		struct Info
+		{
+			Symbol mSymbol;
+			unsigned int mARGB;
 
-            Info():mSymbol(Symbol::None),mARGB(0) {}
-            Info(Symbol symbol, unsigned int ARGB):mSymbol(symbol),mARGB(ARGB) {}
-        };
+			Info() :mSymbol(Symbol::None), mARGB(0) {}
+			Info(Symbol symbol, unsigned int ARGB) :mSymbol(symbol), mARGB(ARGB) {}
+		};
 
-        const Info & player(size_t playerIndex) const;
+		const Info & player(size_t playerIndex) const;
 
-    private:
-        PlayerSymbolMapping();
-        ~PlayerSymbolMapping() {}
+	private:
+		PlayerSymbolMapping();
+		~PlayerSymbolMapping() {}
 
-    private:
-        static const unsigned int PLAYER_MAP_SIZE;
-        std::vector<Info> mMap;
-    };
+	private:
+		static const unsigned int PLAYER_MAP_SIZE;
+		std::vector<Info> mMap;
+	};
 
-    PlayerSymbolMapping & PlayerSymbolMapping::instance()
-    {
-        static PlayerSymbolMapping mapping;
-        return mapping;
-    }
+	PlayerSymbolMapping & PlayerSymbolMapping::instance()
+	{
+		static PlayerSymbolMapping mapping;
+		return mapping;
+	}
 
 } // namespace Game
-
-#endif // MAPPING_H

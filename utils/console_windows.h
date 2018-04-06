@@ -18,42 +18,35 @@
 ****************************************************************************************/
 
 #pragma once
-#include "symbols.h"
-#include "player.h"
+#ifdef _WIN32
 
-namespace Game
+#include "point.h"
+#include "console_abstract.h"
+#include <string>
+
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN 
+#include <Windows.h>
+
+namespace Utils
 {
 
-	/**
-	 * @brief The Cell class is the container of a single cell grid for TicTacToe
-	 */
-	class Cell final
+	class ConsoleWindows final : public ConsoleAbstract
 	{
 	public:
-		Cell() :mpPlayer(nullptr), mLocked(false) {}
+		ConsoleWindows();
+		~ConsoleWindows();
 
-		void setFree() { mpPlayer = nullptr; mLocked = false; }
-		bool free() const { return !mpPlayer && !mLocked; }
-
-		void setOwner(const Player * pPlayer) { mpPlayer = pPlayer; }
-		const Player * owner() const { return mpPlayer; }
-
-		inline void setLocked(bool locked) { mLocked = locked; }
-		inline bool locked() const { return mLocked; }
-
-		inline Symbol symbol() const;
+		bool write(char character, const Utils::PointUInt & coordinate) override final;
+		bool write(const std::string & text, const PointUInt &coordinate, bool clearLine = true) override final;
+		bool clear(const Utils::PointUInt & coordinate, unsigned int length = 0) override final;
+		bool cursorAt(const Utils::PointUInt & coordinate) override final;
+		Utils::PointUInt size() const override final;
 
 	private:
-		const Player * mpPlayer;
-		bool mLocked;
+		HANDLE mHandle;
 	};
 
-	Symbol Cell::symbol() const
-	{
-		if (mpPlayer)
-			return mpPlayer->symbolOwned();
+} // namespace Utils
 
-		return mLocked ? Symbol::Unavaiable : Symbol::None;
-	}
-
-} // namespace Game
+#endif // _WIN32
