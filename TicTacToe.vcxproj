@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="game\cell.hpp" />
+    <ClInclude Include="game\config.hpp" />
     <ClInclude Include="game\mapping.hpp" />
     <ClInclude Include="game\player.hpp" />
     <ClInclude Include="game\symbols.hpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="utils\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="game\config.cpp" />
     <ClCompile Include="game\mapping.cpp" />
     <ClCompile Include="game\tictactoe.cpp" />
     <ClCompile Include="main.cpp" />

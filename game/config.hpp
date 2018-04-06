@@ -17,40 +17,37 @@
 **
 ****************************************************************************************/
 
-#include "stdafx.h"
-#include "game/tictactoe.hpp"
-#include "game/mapping.hpp"
-#include "game/config.hpp"
-#include <utils.hpp>
+#pragma once
+#include <string>
 #include <iostream>
+#include "tictactoe.hpp"
 
-int main()
-{
-	// System initing
-	Utils::initRandomize();
-	Utils::Console::init();
+namespace Game {
+	namespace Config {
 
-	// Board configuration using user-input
-	Game::TicTacToe::GameParams params;
-	Game::Config::config(params);
+		template <typename T>
+		void waitNumericInput(const char * text, T min, T max, T & output)
+		{
+			static char buffer[512];
 
-	// Clear up console and set the initial position
-	const Utils::PointUInt size = Utils::Console::instance()->size();
-	Utils::Console::instance()->clear(Utils::PointUInt(0, 0), size.x() * size.y());
-	Utils::Console::instance()->cursorAt(Utils::PointUInt(0, 0));
+			memset(buffer, 0, sizeof(buffer));
+			sprintf_s(buffer, "%s [%u-%u]: ", text, min, max);
 
-	// Game initing
-	Game::TicTacToe ttt(params);
-	if (!ttt.init())
-	{
-		std::cerr << "Cannot initialize Tic Tac Toe game" << std::endl;
-		return -1;
-	}
+			std::string input;
+			char inputChar = 0;
 
-	// Game loop
-	while (ttt.update()) { /* update loop */ }
+			do
+			{
+				std::cout << buffer;
+				std::cin >> input;
 
-	// System deiniting
-	Utils::Console::deinit();
-	return 0;
-}
+				inputChar = input.at(0);
+				output = inputChar - '0';
+			} while (!isdigit(inputChar) || output < min || output > max);
+		}
+
+		void waitBooleanInput(const char * text, bool & output);
+		void config(TicTacToe::GameParams & params);
+
+	} // namespace Config
+} // namespace Game
