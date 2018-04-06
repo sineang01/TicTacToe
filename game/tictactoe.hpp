@@ -20,7 +20,7 @@
 #pragma once
 #include "cell.hpp"
 #include "player.hpp"
-#include "../utils/utils.hpp"
+#include <utils.hpp>
 #include <vector>
 #include <algorithm>
 

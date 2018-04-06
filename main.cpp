@@ -20,7 +20,7 @@
 #include "stdafx.h"
 #include "game/tictactoe.hpp"
 #include "game/mapping.hpp"
-#include "utils/utils.hpp"
+#include <utils.hpp>
 #include <iostream>
 
 template <typename T>

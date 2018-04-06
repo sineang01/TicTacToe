@@ -20,7 +20,7 @@
 #include "stdafx.h"
 
 #include "mapping.hpp"
-#include "../utils/utils.hpp"
+#include <utils.hpp>
 
 namespace Game
 {
