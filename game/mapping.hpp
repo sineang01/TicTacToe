@@ -19,6 +19,7 @@
 
 #pragma once
 #include <vector>
+#include <cstring>
 #include "symbols.hpp"
 
 namespace Game {
