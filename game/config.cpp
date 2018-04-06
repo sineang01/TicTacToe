@@ -23,7 +23,7 @@
 namespace Game {
 	namespace Config {
 
-		void waitBooleanInput(const char * text, bool & output)
+		void waitBooleanInput(std::string & text, bool & output)
 		{
 			std::string input;
 			char inputChar = 0;
@@ -50,11 +50,11 @@ namespace Game {
 			params.players.resize(playersNum);
 			for (unsigned int i = 0; i < playersNum; ++i)
 			{
-				char text[50];
-				sprintf_s(text, "Is Player%u human [y-n]? ", i);
+				std::ostringstream text;
+				text <<  "Is Player" << i << " human [y-n]? ";
 
 				bool val = false;
-				waitBooleanInput(text, val);
+				waitBooleanInput(text.str(), val);
 				params.players[i] = val;
 			}
 
