@@ -83,7 +83,7 @@ namespace Game
 
 		for (i = 0; i < mGameParams.unavailableCells; ++i)
 		{
-			const unsigned int id = Utils::Random::get(boardSize() + 1);
+			const unsigned int id = Utils::Random::get(boardSize() - 1);
 			if (!mBoard[id].locked())
 			{
 				mBoard[id].setLocked(true);
@@ -314,8 +314,8 @@ namespace Game
 
 		do
 		{
-			point.ry() = Utils::Random::get(mGameParams.boardHeight + 1);
-			point.rx() = Utils::Random::get(mGameParams.boardWidth + 1);
+			point.ry() = Utils::Random::get(mGameParams.boardHeight - 1);
+			point.rx() = Utils::Random::get(mGameParams.boardWidth - 1);
 		} while (!cell(point).free());
 
 		return point;
