@@ -63,6 +63,9 @@
     <ClInclude Include="game\config.hpp">
       <Filter>Header Files\game</Filter>
     </ClInclude>
+    <ClInclude Include="utils\random.hpp">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

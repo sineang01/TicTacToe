@@ -18,6 +18,36 @@
 ****************************************************************************************/
 
 #pragma once
-#include "point.hpp"
-#include "console.hpp"
-#include "random.hpp"
+
+#include <random>
+
+namespace Utils {
+	namespace Random {
+
+		static std::mt19937 g_rng;
+
+		inline void init()
+		{
+			g_rng.seed(std::random_device()());
+		}
+
+		/**
+		* @brief Returns a value between 0 and max
+		*/
+		inline unsigned int get(unsigned int max)
+		{
+			std::uniform_int_distribution<std::mt19937::result_type> dist(0, max);
+			return dist(g_rng);
+		}
+
+		/**
+		* @brief Returns a value between min and max
+		*/
+		inline unsigned int get(unsigned int min, unsigned int max)
+		{
+			std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
+			return dist(g_rng);
+		}
+
+	} // namespace Random
+} // namespace Utils

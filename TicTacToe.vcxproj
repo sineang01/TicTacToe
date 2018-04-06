@@ -169,6 +169,7 @@
     <ClInclude Include="utils\console_windows.hpp" />
     <ClInclude Include="utils\console_abstract.hpp" />
     <ClInclude Include="utils\point.hpp" />
+    <ClInclude Include="utils\random.hpp" />
     <ClInclude Include="utils\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
