@@ -19,8 +19,6 @@
 
 #pragma once
 
-#include <iostream>
-#include <cstdlib>
 #include <random>
 
 #include "point.hpp"

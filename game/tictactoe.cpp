@@ -26,6 +26,7 @@
 #include <string>
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 namespace Game
 {
