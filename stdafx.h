@@ -24,3 +24,12 @@
 #  include <stdio.h>
 #  include <tchar.h>
 #endif
+
+#ifdef _DEBUG
+#  include <cassert>
+#  define game_assert(condition) { assert(condition); }
+#  define game_fatal_assert(condition) { if (!(condition)) { assert(condition); throw; } }
+#else
+#  define game_assert(condition) {}
+#  define game_fatal_assert(condition) {  if (!(condition)) throw; }
+#endif

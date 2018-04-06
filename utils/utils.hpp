@@ -21,34 +21,38 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <ctime>
+#include <random>
 
 #include "point.hpp"
 #include "console.hpp"
 
-#ifdef _DEBUG
-#include <cassert>
-#define game_assert(condition) { assert(condition); }
-#define game_fatal_assert(condition) { if (!(condition)) { assert(condition); throw; } }
-#else
-#define game_assert(condition) {}
-#define game_fatal_assert(condition) {  if (!(condition)) throw; }
-#endif
+namespace Utils {
+	namespace Random {
 
-namespace Utils
-{
+		static std::mt19937 g_rng;
 
-	inline void initRandomize()
-	{
-		std::srand(static_cast<unsigned int>(std::time(0)));
-	}
+		inline void init()
+		{
+			g_rng.seed(std::random_device()());
+		}
 
-	/**
-	 * @brief Returns a value between 0 and max (excluded)
-	 */
-	inline int randomize(unsigned int max = RAND_MAX)
-	{
-		return std::rand() % max;
-	}
+		/**
+		 * @brief Returns a value between 0 and max
+		 */
+		inline unsigned int get(unsigned int max)
+		{
+			std::uniform_int_distribution<std::mt19937::result_type> dist(0, max);
+			return dist(g_rng);
+		}
 
+		/**
+		* @brief Returns a value between min and max
+		*/
+		inline unsigned int get(unsigned int min, unsigned int max)
+		{
+			std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
+			return dist(g_rng);
+		}
+
+	} // namespace Random
 } // namespace Utils

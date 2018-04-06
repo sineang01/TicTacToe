@@ -27,7 +27,7 @@
 int main()
 {
 	// System initing
-	Utils::initRandomize();
+	Utils::Random::init();
 	Utils::Console::init();
 
 	// Board configuration using user-input
