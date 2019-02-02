@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -18,36 +18,32 @@
 ****************************************************************************************/
 
 #pragma once
-
 #include <random>
 
-namespace Utils {
-	namespace Random {
+namespace utils {
+    namespace random {
 
-		static std::mt19937 g_rng;
+        extern std::mt19937 g_rng;
 
-		inline void init()
-		{
-			g_rng.seed(std::random_device()());
-		}
+        inline void initialize() { g_rng.seed(std::random_device()()); }
 
-		/**
-		* @brief Returns a value between 0 and max
-		*/
-		inline unsigned int get(unsigned int max)
-		{
-			std::uniform_int_distribution<std::mt19937::result_type> dist(0, max);
-			return dist(g_rng);
-		}
+        /**
+         * @brief Returns a value between 0 and max
+         */
+        inline unsigned int generate(unsigned int max)
+        {
+            std::uniform_int_distribution<std::mt19937::result_type> dist(0, max);
+            return dist(g_rng);
+        }
 
-		/**
-		* @brief Returns a value between min and max
-		*/
-		inline unsigned int get(unsigned int min, unsigned int max)
-		{
-			std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
-			return dist(g_rng);
-		}
+        /**
+         * @brief Returns a value between min and max
+         */
+        inline unsigned int generate(unsigned int min, unsigned int max)
+        {
+            std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
+            return dist(g_rng);
+        }
 
-	} // namespace Random
-} // namespace Utils
+    } // namespace random
+} // namespace utils

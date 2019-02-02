@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -18,42 +18,40 @@
 ****************************************************************************************/
 
 #pragma once
+#include "symbols.hpp"
 #include <array>
 #include <cstring>
-#include "symbols.hpp"
 
-namespace Game {
+namespace game {
 
-	static constexpr unsigned int PLAYER_MAP_SIZE = 6;
+    static constexpr unsigned int PLAYER_MAP_SIZE{6};
 
-	class PlayerSymbolMapping final
-	{
-	public:
-		struct Info
-		{
-			Symbol mSymbol = Symbol::None;
-			unsigned int mRGB = 0;
+    class player_symbol_mapping final
+    {
+      public:
+        struct Info
+        {
+            symbol m_symbol{symbol::None};
+            unsigned int m_rgb{0};
 
-			Info() {}
-			Info(Symbol symbol, unsigned int rgb) : mSymbol(symbol), mRGB(rgb) {}
-		};
+            Info() = default;
+            Info(symbol get_symbol, unsigned int rgb) : m_symbol(get_symbol), m_rgb(rgb) {}
+        };
 
-	public:
-		static inline PlayerSymbolMapping & instance();
-		const Info & player(size_t playerIndex) const;
+      public:
+        static inline player_symbol_mapping & get_instance()
+        {
+            static player_symbol_mapping m;
+            return m;
+        }
 
-	private:
-		PlayerSymbolMapping();
-		~PlayerSymbolMapping() {}
+        const Info & get_player(size_t playerIndex) const;
 
-	private:
-		std::array<Info, PLAYER_MAP_SIZE> mMap;
-	};
+      private:
+        player_symbol_mapping();
 
-	PlayerSymbolMapping & PlayerSymbolMapping::instance()
-	{
-		static PlayerSymbolMapping mapping;
-		return mapping;
-	}
+      private:
+        std::array<Info, PLAYER_MAP_SIZE> m_map;
+    };
 
-} // namespace Game
+} // namespace game

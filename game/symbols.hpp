@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -20,24 +20,24 @@
 #pragma once
 #include <type_traits>
 
-namespace Game {
+namespace game {
 
-	enum class Symbol : char
-	{
-		Cross = 'X',
-		Circle = 'O',
-		Tilde = '~',
-		At = '@',
-		Plus = '+',
-		Minus = '-',
-		Unavaiable = '#',
-		None = ' '
-	};
+    enum class symbol : char
+    {
+        Cross = 'X',
+        Circle = 'O',
+        Tilde = '~',
+        At = '@',
+        Plus = '+',
+        Minus = '-',
+        Unavaiable = '#',
+        None = ' '
+    };
 
-	inline char printSymbol(Symbol type)
-	{
-		using utype = std::underlying_type<Symbol>::type;
-		return static_cast<utype>(type);
-	}
+    inline char print_symbol(symbol type)
+    {
+        using utype = std::underlying_type<symbol>::type;
+        return static_cast<utype>(type);
+    }
 
-} // namespace Game
+} // namespace game

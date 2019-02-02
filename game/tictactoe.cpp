@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,427 +17,468 @@
 **
 ****************************************************************************************/
 
-#include "stdafx.h"
-
+#include <chrono>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <thread>
-#include <chrono>
-#include <iostream>
 
-#include "tictactoe.hpp"
 #include "mapping.hpp"
-
-namespace Game {
-
-	const unsigned int TicTacToe::BOARD_CELL_WIDTH = 5;
-	const unsigned int TicTacToe::BOARD_CELL_HEIGHT = 3;
-	const unsigned int TicTacToe::BOARD_CELL_SEPARATOR_H = 1;
-	const unsigned int TicTacToe::BOARD_OFFSET_LEFT = 5;
-	const unsigned int TicTacToe::BOARD_OFFSET_RIGHT = 2;
-	const unsigned int TicTacToe::BOARD_OFFSET_TOP = 3;
-	const unsigned int TicTacToe::BOARD_OFFSET_BOTTOM = 1;
-
-	const unsigned int TicTacToe::TIMER_AI_THINKING_MSECS = 500;
-	const unsigned int TicTacToe::TIMER_GAME_OVER_MSECS = 2500;
-
-	TicTacToe::TicTacToe(const GameParams & gameParams) 
-		:mGameParams(gameParams)
-	{
-	}
-
-	TicTacToe::~TicTacToe()
-	{
-	}
-
-	bool TicTacToe::init()
-	{
-		const size_t sizePlayers = mGameParams.players.size();
-		game_fatal_assert(sizePlayers >= 2);
-
-		mPlayers.resize(sizePlayers);
-		for (size_t i = 0; i < sizePlayers; ++i)
-		{
-			mPlayers[i].setSymbolOwned(PlayerSymbolMapping::instance().player(i).mSymbol);
-			mPlayers[i].setHuman(mGameParams.players.at(i));
-		}
-
-		game_fatal_assert(boardSize() > 0);
-		mBoard.resize(boardSize());
-
-		displayBoardEmpty();
-
-		return reset();
-	}
-
-	bool TicTacToe::reset()
-	{
-		mCurrentPlayer = 0;
-
-		unsigned i = 0;
-		for (; i < boardSize(); ++i)
-		{
-			mBoard[i].setFree();
-		}
-
-		for (i = 0; i < mGameParams.unavailableCells; ++i)
-		{
-			const unsigned int id = Utils::Random::get(boardSize() - 1);
-			if (!mBoard[id].locked())
-			{
-				mBoard[id].setLocked(true);
-			}
-			else
-			{
-				--i;
-			}
-		}
-
-		return true;
-	}
-
-	void TicTacToe::displayBoardEmpty() const
-	{
-		auto fill = [](char c, unsigned int length) -> void
-		{
-			for (unsigned int i = 0; i < length; ++i)
-				std::cout << c;
-		};
-
-		auto spacing = [=](bool drawVSeparator, bool drawHSeparator) -> void
-		{
-			const char symbolV = drawVSeparator ? '|' : ' ';
-			const char symbolH = drawHSeparator ? '_' : ' ';
-
-			fill(' ', BOARD_OFFSET_LEFT);
-
-			for (unsigned int column = 0; column < mGameParams.boardWidth; ++column)
-			{
-				std::cout << symbolV;
-				fill(symbolH, BOARD_CELL_WIDTH);
-			}
-
-			std::cout << symbolV << std::endl;
-		};
-
-		// BOARD_OFFSET_TOP
-		std::cout << std::endl << std::endl;
-		spacing(false, true);
-
-		// BOARD_CELL_HEIGHT
-		for (unsigned int row = 0; row < mGameParams.boardHeight; ++row)
-		{
-			spacing(true, false);
-			spacing(true, false);
-			spacing(true, true);
-		}
-
-		// Row numbers
-		unsigned int coord = 0;
-		for (unsigned int row = 0; row < mGameParams.boardHeight; ++row)
-		{
-			coord = 4 + row * 3;
-			Utils::Console::instance()->write((char)(row + 49), Utils::PointUInt(2, coord));
-		}
-
-		// Column letters
-		for (unsigned int column = 0; column < mGameParams.boardWidth; ++column)
-		{
-			coord = 8 + column * 6;
-			Utils::Console::instance()->write((char)(column + 65), Utils::PointUInt(coord, 1));
-		}
-	}
-
-	void TicTacToe::displayBoardCells() const
-	{
-		unsigned int x = 0, y = 0;
-		for (unsigned int row = 0; row < mGameParams.boardHeight; ++row)
-		{
-			for (unsigned int column = 0; column < mGameParams.boardWidth; ++column)
-			{
-				x = BOARD_OFFSET_LEFT + BOARD_CELL_SEPARATOR_H + (BOARD_CELL_WIDTH / 2) + (column * BOARD_CELL_WIDTH) + column;
-				y = BOARD_OFFSET_TOP + (BOARD_CELL_HEIGHT / 2) + (row * BOARD_CELL_HEIGHT);
-
-				const Cell & c = cell(Utils::PointUInt(column, row));
-				Utils::Console::instance()->write(printSymbol(c.symbol()), Utils::PointUInt(x, y));
-			}
-		}
-	}
-
-	void TicTacToe::displayPlayerInfo() const
-	{
-		const size_t playersSize = mPlayers.size();
-		for (size_t i = 0; i < playersSize; ++i)
-		{
-			std::ostringstream ss;
-			ss << "Player" << i + 1 << " (" << printSymbol(mPlayers.at(i).symbolOwned()) << ") - Score: " << mPlayers.at(i).score();
-
-			Utils::Console::instance()->write(ss.str(), Utils::PointUInt(consoleBoardRight() + BOARD_OFFSET_RIGHT, BOARD_OFFSET_TOP + static_cast<unsigned int>(i)));
-		}
-	}
-
-	void TicTacToe::displayTurn() const
-	{
-		std::ostringstream ss;
-		ss << "Player" << mCurrentPlayer + 1 << " playing...";
-
-		Utils::Console::instance()->write(ss.str(), Utils::PointUInt(consoleBoardRight() + BOARD_OFFSET_RIGHT, BOARD_OFFSET_TOP + static_cast<unsigned int>(mPlayers.size()) + 1));
-	}
-
-	bool TicTacToe::update()
-	{
-		displayBoardCells();
-		displayPlayerInfo();
-		displayTurn();
-
-		const Utils::PointUInt coordScreen(BOARD_OFFSET_LEFT, consoleBoardBottom() + BOARD_OFFSET_BOTTOM);
-		Utils::Console::instance()->clear(coordScreen);
-
-		Player & currentPlayer = mPlayers.at(mCurrentPlayer);
-		Utils::PointUInt playerMovePos;
-		if (currentPlayer.ai())
-		{
-			playerMovePos = playingAI(currentPlayer);
-		}
-		else
-			if (currentPlayer.human())
-			{
-				playerMovePos = playingHuman(currentPlayer);
-			}
-
-		const bool gameOverPlayerWon = playerWon(playerMovePos, currentPlayer);
-		const bool gameOverBoardFull = boardFull();
-		if (gameOverPlayerWon || gameOverBoardFull)
-		{
-			displayBoardCells();
-
-			if (gameOverPlayerWon)
-			{
-				currentPlayer.increaseScore();
-
-				std::ostringstream ss;
-				ss << "Player" << mCurrentPlayer + 1 << " WON!!!!!";
-
-				Utils::Console::instance()->write(ss.str(), Utils::PointUInt(consoleBoardRight() + BOARD_OFFSET_RIGHT, BOARD_OFFSET_TOP + static_cast<unsigned int>(mPlayers.size()) + 1));
-			}
-			else
-			{
-				Utils::Console::instance()->write("No Winner :(", Utils::PointUInt(consoleBoardRight() + BOARD_OFFSET_RIGHT, BOARD_OFFSET_TOP + static_cast<unsigned int>(mPlayers.size()) + 1));
-			}
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_GAME_OVER_MSECS));
-			reset();
-		}
-		else
-		{
-			changeToNextPlayer();
-		}
-
-		return true;
-	}
-
-	bool TicTacToe::playerWon(const Utils::PointUInt & lastMovePos, const Player & currentPlayer) const
-	{
-		const Symbol winCellType = currentPlayer.symbolOwned();
-
-		auto checkWinConditionH = [=](Symbol winCellType) -> bool
-		{
-			unsigned int counter = 0;
-
-			for (unsigned int column = 0; column < mGameParams.boardWidth; ++column)
-			{
-				const Cell & c = cell(Utils::PointUInt(column, lastMovePos.y()));
-				if (c.owner() && c.owner()->symbolOwned() == winCellType)
-				{
-					++counter;
-					if (counter >= mGameParams.winConditionCells)
-						return true;
-				}
-				else
-				{
-					counter = 0;
-				}
-			}
-
-			return false;
-		};
-
-		auto checkWinConditionV = [=](Symbol winCellType) -> bool
-		{
-			unsigned int counter = 0;
-
-			for (unsigned int row = 0; row < mGameParams.boardHeight; ++row)
-			{
-				const Cell & c = cell(Utils::PointUInt(lastMovePos.x(), row));
-				if (c.owner() && c.owner()->symbolOwned() == winCellType)
-				{
-					++counter;
-					if (counter >= mGameParams.winConditionCells)
-						return true;
-				}
-				else
-				{
-					counter = 0;
-				}
-			}
-
-			return false;
-		};
-
-		if (checkWinConditionH(winCellType))
-			return true;
-
-		if (checkWinConditionV(winCellType))
-			return true;
-
-		return false;
-	}
-
-	bool TicTacToe::boardFull() const
-	{
-		CellList::const_iterator itEnd = mBoard.end();
-		for (CellList::const_iterator it = mBoard.begin(); it != itEnd; ++it)
-		{
-			if (it->free())
-				return false;
-		}
-
-		return true;
-	}
-
-	Utils::PointUInt TicTacToe::findFreeCellPosition() const
-	{
-		game_fatal_assert(!boardFull());
-
-		Utils::PointUInt point;
-
-		do
-		{
-			point.ry() = Utils::Random::get(mGameParams.boardHeight - 1);
-			point.rx() = Utils::Random::get(mGameParams.boardWidth - 1);
-		} while (!cell(point).free());
-
-		return point;
-	}
-
-	Utils::PointUInt TicTacToe::playingAI(const Player & player)
-	{
-		game_fatal_assert(!boardFull());
-
-		auto writeTimedMessage = [](const std::string & text, const Utils::PointUInt & coordinate) -> void
-		{
-			Utils::Console::instance()->write(text, coordinate);
-			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_AI_THINKING_MSECS));
-		};
-
-		static const std::string s = "AI doing its best";
-
-		Utils::PointUInt coordinate(BOARD_OFFSET_LEFT, consoleBoardBottom() + BOARD_OFFSET_BOTTOM);
-		Utils::Console::instance()->cursorAt(coordinate);
-
-		writeTimedMessage(s, coordinate);
-		coordinate.rx() += static_cast<unsigned int>(s.length());
-		writeTimedMessage(".", coordinate);
-		coordinate.rx() += 1;
-		writeTimedMessage(".", coordinate);
-		coordinate.rx() += 1;
-		writeTimedMessage(".", coordinate);
-
-		const Utils::PointUInt point = findFreeCellPosition();
-		cell(point).setOwner(&player);
-		return point;
-	}
-
-	Utils::PointUInt TicTacToe::playingHuman(const Player & player)
-	{
-		game_fatal_assert(!boardFull());
-
-		Utils::PointUInt point;
-
-		do
-		{
-			while (keepWaitingForValidRow(point.ry())) { /* do nothing */ }
-			while (keepWaitingForValidColumn(point.rx())) { /* do nothing */ }
-		} while (!cell(point).free());
-
-		cell(point).setOwner(&player);
-		return point;
-	}
-
-	bool TicTacToe::keepWaitingForValidRow(unsigned int & row) const
-	{
-		static const std::string s("Please insert row and press ENTER: ");
-
-		Utils::PointUInt coordScreen(BOARD_OFFSET_LEFT, consoleBoardBottom() + BOARD_OFFSET_BOTTOM);
-		Utils::Console::instance()->write(s, coordScreen);
-
-		Utils::PointUInt coordCursor(BOARD_OFFSET_LEFT + static_cast<unsigned int>(s.length()), consoleBoardBottom() + BOARD_OFFSET_BOTTOM);
-		Utils::Console::instance()->cursorAt(coordCursor);
-
-		std::string input;
-		std::cin >> input;
-
-		char rowStr = input.at(0);
-
-		if (!isdigit(rowStr))
-			return true;
-
-		row = rowStr - '0' - 1;
-		if (row >= mGameParams.boardHeight)
-			return true;
-
-		return false;
-	}
-
-	bool TicTacToe::keepWaitingForValidColumn(unsigned int & column) const
-	{
-		static const std::string s("Please insert column and press ENTER: ");
-
-		Utils::PointUInt coordScreen(BOARD_OFFSET_LEFT, consoleBoardBottom() + BOARD_OFFSET_BOTTOM);
-		Utils::Console::instance()->write(s, coordScreen);
-
-		Utils::PointUInt coordCursor(BOARD_OFFSET_LEFT + static_cast<unsigned int>(s.length()), consoleBoardBottom() + BOARD_OFFSET_BOTTOM);
-		Utils::Console::instance()->cursorAt(coordCursor);
-
-		std::string input;
-		std::cin >> input;
-
-		char columnStr = input.at(0);
-
-		if (!isalpha(columnStr))
-			return true;
-
-		columnStr = static_cast<char>(tolower(columnStr));
-		column = columnStr - 'a';
-		if (column >= mGameParams.boardWidth)
-			return true;
-
-		return false;
-	}
-
-	unsigned int TicTacToe::changeToNextPlayer()
-	{
-		++mCurrentPlayer;
-		if (mCurrentPlayer >= mPlayers.size())
-			mCurrentPlayer = 0;
-
-		return mCurrentPlayer;
-	}
-
-	const Cell & TicTacToe::cell(const Utils::PointUInt & point) const
-	{
-		const unsigned int id = point.y() * mGameParams.boardWidth + point.x();
-		game_fatal_assert(id <= boardSize() - 1);
-
-		return mBoard[id];
-	}
-
-	Cell & TicTacToe::cell(const Utils::PointUInt & point)
-	{
-		const unsigned int id = point.y() * mGameParams.boardWidth + point.x();
-		game_fatal_assert(id <= boardSize() - 1);
-
-		return mBoard[id];
-	}
-
-} // namespace Game
+#include "tictactoe.hpp"
+
+namespace game {
+
+    tic_tac_toe::tic_tac_toe(const game::tic_tac_toe::game_params & gameParams)
+        : m_game_params(gameParams)
+    {}
+
+    bool tic_tac_toe::initialize()
+    {
+        const size_t size_players{m_game_params.m_players.size()};
+        assert(size_players >= 2);
+        if (size_players < 2)
+        {
+            return false;
+        }
+
+        m_players.resize(size_players);
+        for (size_t i{0}; i < size_players; ++i)
+        {
+            m_players[i].set_symbol_owned(
+                player_symbol_mapping::get_instance().get_player(i).m_symbol);
+
+            m_players[i].set_human(m_game_params.m_players.at(i));
+        }
+
+        assert(get_board_size() > 0);
+        if (get_board_size() <= 0)
+        {
+            return false;
+        }
+
+        m_board.resize(get_board_size());
+        display_board_empty();
+        return reset();
+    }
+
+    bool tic_tac_toe::reset()
+    {
+        m_current_player = 0;
+
+        unsigned i{0};
+        for (; i < get_board_size(); ++i)
+        {
+            m_board[i].set_free();
+        }
+
+        for (i = 0; i < m_game_params.m_unavailable_cells; ++i)
+        {
+            const unsigned int id{utils::random::generate(get_board_size() - 1)};
+            if (!m_board[id].get_locked())
+            {
+                m_board[id].set_locked(true);
+            }
+            else
+            {
+                --i;
+            }
+        }
+
+        return true;
+    }
+
+    void tic_tac_toe::display_board_empty() const
+    {
+        auto fill = [](char c, unsigned int length) -> void {
+            for (unsigned int i{0}; i < length; ++i)
+            {
+                std::cout << c;
+            }
+        };
+
+        auto spacing = [=](bool drawVSeparator, bool drawHSeparator) -> void {
+            const char symbol_v{drawVSeparator ? '|' : ' '};
+            const char symbol_h{drawHSeparator ? '_' : ' '};
+
+            fill(' ', BOARD_OFFSET_LEFT);
+
+            for (unsigned int column{0}; column < m_game_params.m_board_width; ++column)
+            {
+                std::cout << symbol_v;
+                fill(symbol_h, BOARD_CELL_WIDTH);
+            }
+
+            std::cout << symbol_v << std::endl;
+        };
+
+        // BOARD_OFFSET_TOP
+        std::cout << std::endl << std::endl;
+        spacing(false, true);
+
+        // BOARD_CELL_HEIGHT
+        for (unsigned int row{0}; row < m_game_params.m_board_height; ++row)
+        {
+            spacing(true, false);
+            spacing(true, false);
+            spacing(true, true);
+        }
+
+        // Row numbers
+        unsigned int coord{0};
+        for (unsigned int row{0}; row < m_game_params.m_board_height; ++row)
+        {
+            coord = 4 + row * 3;
+            utils::console::get_instance()->write(static_cast<char>(row + 49),
+                                                  utils::point_uint(2, coord));
+        }
+
+        // Column letters
+        for (unsigned int column{0}; column < m_game_params.m_board_width; ++column)
+        {
+            coord = 8 + column * 6;
+            utils::console::get_instance()->write(static_cast<char>(column + 65),
+                                                  utils::point_uint(coord, 1));
+        }
+    }
+
+    void tic_tac_toe::display_board_cells() const
+    {
+        unsigned int x{0}, y{0};
+        for (unsigned int row{0}; row < m_game_params.m_board_height; ++row)
+        {
+            for (unsigned int column{0}; column < m_game_params.m_board_width; ++column)
+            {
+                x = BOARD_OFFSET_LEFT + BOARD_CELL_SEPARATOR_H + (BOARD_CELL_WIDTH / 2) +
+                    (column * BOARD_CELL_WIDTH) + column;
+
+                y = BOARD_OFFSET_TOP + (BOARD_CELL_HEIGHT / 2) + (row * BOARD_CELL_HEIGHT);
+
+                const cell & c = get_cell(utils::point_uint(column, row));
+
+                utils::console::get_instance()->write(print_symbol(c.get_symbol()),
+                                                      utils::point_uint(x, y));
+            }
+        }
+    }
+
+    void tic_tac_toe::display_player_info() const
+    {
+        const size_t players_size{m_players.size()};
+        for (size_t i{0}; i < players_size; ++i)
+        {
+            std::ostringstream ss;
+            ss << "Player" << i + 1 << " (" << print_symbol(m_players.at(i).get_symbol_owned())
+               << ") - Score: " << m_players.at(i).get_score();
+
+            utils::console::get_instance()
+                ->write(ss.str(),
+                        utils::point_uint(get_console_board_right() + BOARD_OFFSET_RIGHT,
+                                          BOARD_OFFSET_TOP + static_cast<unsigned int>(i)));
+        }
+    }
+
+    void tic_tac_toe::display_turn() const
+    {
+        std::ostringstream ss;
+        ss << "Player" << m_current_player + 1 << " playing...";
+
+        utils::console::get_instance()
+            ->write(ss.str(),
+                    utils::point_uint(get_console_board_right() + BOARD_OFFSET_RIGHT,
+                                      BOARD_OFFSET_TOP +
+                                          static_cast<unsigned int>(m_players.size()) + 1));
+    }
+
+    bool tic_tac_toe::update()
+    {
+        display_board_cells();
+        display_player_info();
+        display_turn();
+
+        const utils::point_uint coord_screen(BOARD_OFFSET_LEFT,
+                                             get_console_board_bottom() + BOARD_OFFSET_BOTTOM);
+
+        utils::console::get_instance()->clear(coord_screen);
+
+        player & current_player{m_players.at(m_current_player)};
+        utils::point_uint player_move_pos;
+
+        if (current_player.is_ai())
+        {
+            player_move_pos = playing_ai(current_player);
+        }
+        else if (current_player.is_human())
+        {
+            player_move_pos = playing_human(current_player);
+        }
+
+        const bool game_over_player_won{player_won(player_move_pos, current_player)};
+        const bool game_over_board_full{board_full()};
+        if (game_over_player_won || game_over_board_full)
+        {
+            display_board_cells();
+
+            if (game_over_player_won)
+            {
+                current_player.increase_score();
+
+                std::ostringstream ss;
+                ss << "Player" << m_current_player + 1 << " WON!!!!!";
+
+                utils::console::get_instance()
+                    ->write(ss.str(),
+                            utils::point_uint(get_console_board_right() + BOARD_OFFSET_RIGHT,
+                                              BOARD_OFFSET_TOP +
+                                                  static_cast<unsigned int>(m_players.size()) + 1));
+            }
+            else
+            {
+                utils::console::get_instance()
+                    ->write("No Winner :(",
+                            utils::point_uint(get_console_board_right() + BOARD_OFFSET_RIGHT,
+                                              BOARD_OFFSET_TOP +
+                                                  static_cast<unsigned int>(m_players.size()) + 1));
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_GAME_OVER_MSECS));
+            reset();
+        }
+        else
+        {
+            change_to_next_player();
+        }
+
+        return true;
+    }
+
+    bool tic_tac_toe::player_won(const utils::point_uint & lastMovePos,
+                                 const game::player & currentPlayer) const
+    {
+        const symbol win_cell_type{currentPlayer.get_symbol_owned()};
+
+        auto check_win_condition_h = [&]() -> bool {
+            unsigned int counter{0};
+
+            for (unsigned int column{0}; column < m_game_params.m_board_width; ++column)
+            {
+                const cell & c = get_cell(utils::point_uint(column, lastMovePos.y()));
+                if ((c.get_owner() != nullptr) &&
+                    c.get_owner()->get_symbol_owned() == win_cell_type)
+                {
+                    ++counter;
+                    if (counter >= m_game_params.m_win_condition_cells)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    counter = 0;
+                }
+            }
+
+            return false;
+        };
+
+        auto check_win_condition_v = [&]() -> bool {
+            unsigned int counter{0};
+
+            for (unsigned int row{0}; row < m_game_params.m_board_height; ++row)
+            {
+                const cell & c = get_cell(utils::point_uint(lastMovePos.x(), row));
+                if ((c.get_owner() != nullptr) &&
+                    c.get_owner()->get_symbol_owned() == win_cell_type)
+                {
+                    ++counter;
+                    if (counter >= m_game_params.m_win_condition_cells)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    counter = 0;
+                }
+            }
+
+            return false;
+        };
+
+        if (check_win_condition_h())
+        {
+            return true;
+        }
+
+        if (check_win_condition_v())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool tic_tac_toe::board_full() const
+    {
+        CellList::const_iterator it_end{m_board.end()};
+        for (CellList::const_iterator it{m_board.begin()}; it != it_end; ++it)
+        {
+            if (it->get_free())
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    utils::point_uint tic_tac_toe::find_free_cell_position() const
+    {
+        assert(!board_full());
+
+        utils::point_uint point;
+
+        do
+        {
+            point.ry() = utils::random::generate(m_game_params.m_board_height - 1);
+            point.rx() = utils::random::generate(m_game_params.m_board_width - 1);
+        } while (!get_cell(point).get_free());
+
+        return point;
+    }
+
+    utils::point_uint tic_tac_toe::playing_ai(const game::player & get_player)
+    {
+        assert(!board_full());
+
+        auto write_timed_message = [](const std::string & text,
+                                      const utils::point_uint & coordinate) -> void {
+            utils::console::get_instance()->write(text, coordinate);
+            std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_AI_THINKING_MSECS));
+        };
+
+        static const std::string s = "AI doing its best";
+
+        utils::point_uint coordinate(BOARD_OFFSET_LEFT,
+                                     get_console_board_bottom() + BOARD_OFFSET_BOTTOM);
+        utils::console::get_instance()->cursor_at(coordinate);
+
+        write_timed_message(s, coordinate);
+        coordinate.rx() += static_cast<unsigned int>(s.length());
+        write_timed_message(".", coordinate);
+        coordinate.rx() += 1;
+        write_timed_message(".", coordinate);
+        coordinate.rx() += 1;
+        write_timed_message(".", coordinate);
+
+        const utils::point_uint point{find_free_cell_position()};
+        get_cell(point).set_owner(&get_player);
+        return point;
+    }
+
+    utils::point_uint tic_tac_toe::playing_human(const game::player & get_player)
+    {
+        assert(!board_full());
+
+        utils::point_uint point;
+
+        do
+        {
+            while (keep_waiting_for_valid_row(point.ry()))
+            {
+                /* do nothing */
+            }
+
+            while (keep_waiting_for_valid_column(point.rx()))
+            {
+                /* do nothing */
+            }
+
+        } while (!get_cell(point).get_free());
+
+        get_cell(point).set_owner(&get_player);
+        return point;
+    }
+
+    bool tic_tac_toe::keep_waiting_for_valid_row(unsigned int & row) const
+    {
+        static const std::string s{"Please insert row and press ENTER: "};
+
+        utils::point_uint coord_screen(BOARD_OFFSET_LEFT,
+                                       get_console_board_bottom() + BOARD_OFFSET_BOTTOM);
+
+        utils::console::get_instance()->write(s, coord_screen);
+
+        utils::point_uint coord_cursor(BOARD_OFFSET_LEFT + static_cast<unsigned int>(s.length()),
+                                       get_console_board_bottom() + BOARD_OFFSET_BOTTOM);
+
+        utils::console::get_instance()->cursor_at(coord_cursor);
+
+        std::string input;
+        std::cin >> input;
+
+        char row_str{input.at(0)};
+
+        if (isdigit(row_str) == 0)
+        {
+            return true;
+        }
+
+        row = static_cast<unsigned int>(row_str - '0' - 1);
+        return row >= m_game_params.m_board_height;
+    }
+
+    bool tic_tac_toe::keep_waiting_for_valid_column(unsigned int & column) const
+    {
+        static const std::string s("Please insert column and press ENTER: ");
+
+        utils::point_uint coord_screen(BOARD_OFFSET_LEFT,
+                                       get_console_board_bottom() + BOARD_OFFSET_BOTTOM);
+        utils::console::get_instance()->write(s, coord_screen);
+
+        utils::point_uint coord_cursor(BOARD_OFFSET_LEFT + static_cast<unsigned int>(s.length()),
+                                       get_console_board_bottom() + BOARD_OFFSET_BOTTOM);
+        utils::console::get_instance()->cursor_at(coord_cursor);
+
+        std::string input;
+        std::cin >> input;
+
+        char column_str{input.at(0)};
+
+        if (isalpha(column_str) == 0)
+        {
+            return true;
+        }
+
+        column_str = static_cast<char>(tolower(column_str));
+        column = static_cast<unsigned int>(column_str - 'a');
+        return column >= m_game_params.m_board_width;
+    }
+
+    unsigned int tic_tac_toe::change_to_next_player()
+    {
+        ++m_current_player;
+        if (m_current_player >= m_players.size())
+        {
+            m_current_player = 0;
+        }
+
+        return m_current_player;
+    }
+
+    const cell & tic_tac_toe::get_cell(const utils::point_uint & point) const
+    {
+        const unsigned int id{point.y() * m_game_params.m_board_width + point.x()};
+        assert(id <= get_board_size() - 1);
+
+        return m_board[id];
+    }
+
+    cell & tic_tac_toe::get_cell(const utils::point_uint & point)
+    {
+        const unsigned int id{point.y() * m_game_params.m_board_width + point.x()};
+        assert(id <= get_board_size() - 1);
+
+        return m_board[id];
+    }
+
+} // namespace game

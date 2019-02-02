@@ -1,5 +1,2 @@
-*.db
-*.user
+build*/
 .vs/
-.intermediate/
-.output/

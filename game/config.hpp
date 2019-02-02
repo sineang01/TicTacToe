@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -18,36 +18,36 @@
 ****************************************************************************************/
 
 #pragma once
-#include <string>
+#include "tictactoe.hpp"
 #include <cstring>
 #include <iostream>
 #include <sstream>
-#include "tictactoe.hpp"
+#include <string>
 
-namespace Game {
-	namespace Config {
+namespace game {
+    namespace config {
 
-		template <typename T>
-		void waitNumericInput(const char * text, T min, T max, T & output)
-		{
-			std::ostringstream buffer;
-			buffer << text << " [" << min << "-" << max << "]: ";
+        template<typename T>
+        void wait_numeric_input(const char * text, T min, T max, T & output)
+        {
+            std::ostringstream buffer;
+            buffer << text << " [" << min << "-" << max << "]: ";
 
-			std::string input;
-			char inputChar = 0;
+            std::string input;
+            char inputChar{0};
 
-			do
-			{
-				std::cout << buffer.str();
-				std::cin >> input;
+            do
+            {
+                std::cout << buffer.str();
+                std::cin >> input;
 
-				inputChar = input.at(0);
-				output = inputChar - '0';
-			} while (!isdigit(inputChar) || output < min || output > max);
-		}
+                inputChar = input.at(0);
+                output = static_cast<T>(inputChar - '0');
+            } while (!isdigit(inputChar) || output < min || output > max);
+        }
 
-		void waitBooleanInput(const std::string & text, bool & output);
-		void config(TicTacToe::GameParams & params);
+        void wait_boolean_input(const std::string & text, bool & output);
+        void configure(tic_tac_toe::game_params & params);
 
-	} // namespace Config
-} // namespace Game
+    } // namespace config
+} // namespace game

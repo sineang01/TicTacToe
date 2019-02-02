@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,50 +17,66 @@
 **
 ****************************************************************************************/
 
-#include "stdafx.h"
 #include "config.hpp"
 
-namespace Game {
-	namespace Config {
+namespace game {
+    namespace config {
 
-		void waitBooleanInput(const std::string & text, bool & output)
-		{
-			std::string input;
-			char inputChar = 0;
+        void wait_boolean_input(const std::string & text, bool & output)
+        {
+            std::string input;
+            char input_char{0};
 
-			do
-			{
-				std::cout << text;
-				std::cin >> input;
+            do
+            {
+                std::cout << text;
+                std::cin >> input;
 
-				inputChar = input.at(0);
-			} while (inputChar != 'y' && inputChar != 'Y' && inputChar != 'n' && inputChar != 'N');
+                input_char = input.at(0);
+            } while (input_char != 'y' && input_char != 'Y' && input_char != 'n' &&
+                     input_char != 'N');
 
-			output = (inputChar == 'y' || inputChar == 'Y');
-		}
+            output = (input_char == 'y' || input_char == 'Y');
+        }
 
-		void config(TicTacToe::GameParams & params)
-		{
-			waitNumericInput<unsigned int>("Board width", 3, 9, params.boardWidth);
-			waitNumericInput<unsigned int>("Board height", 3, 9, params.boardHeight);
+        void configure(tic_tac_toe::game_params & params)
+        {
+            game::config::wait_numeric_input<unsigned int>("Board width",
+                                                           3,
+                                                           9,
+                                                           params.m_board_width);
+            game::config::wait_numeric_input<unsigned int>("Board height",
+                                                           3,
+                                                           9,
+                                                           params.m_board_height);
 
-			unsigned int playersNum = 0;
-			waitNumericInput<unsigned int>("Players number", 2, 6, playersNum);
+            unsigned int players_num{0};
+            game::config::wait_numeric_input<unsigned int>("Players number", 2, 6, players_num);
 
-			params.players.resize(playersNum);
-			for (unsigned int i = 0; i < playersNum; ++i)
-			{
-				std::ostringstream text;
-				text <<  "Is Player" << i << " human [y-n]? ";
+            params.m_players.resize(players_num);
+            for (unsigned int i{0}; i < players_num; ++i)
+            {
+                std::ostringstream text;
+                text << "Is Player" << i << " human [y-n]? ";
 
-				bool val = false;
-				waitBooleanInput(text.str(), val);
-				params.players[i] = val;
-			}
+                bool val{false};
+                wait_boolean_input(text.str(), val);
+                params.m_players[i] = val;
+            }
 
-			waitNumericInput<unsigned int>("Number of contiguous cells to win", 3, std::min(params.boardWidth, params.boardHeight), params.winConditionCells);
-			waitNumericInput<unsigned int>("Number of unavailable cells", 0, (params.boardHeight * params.boardWidth) - 1, params.unavailableCells);
-		}
+            game::config::wait_numeric_input<unsigned int>("Number of contiguous cells to win",
+                                                           3,
+                                                           std::min(params.m_board_width,
+                                                                    params.m_board_height),
+                                                           params.m_win_condition_cells);
 
-	} // namespace Config
-} // namespace Game
+            game::config::wait_numeric_input<unsigned int>("Number of unavailable cells",
+                                                           0,
+                                                           (params.m_board_height *
+                                                            params.m_board_width) -
+                                                               1,
+                                                           params.m_unavailable_cells);
+        }
+
+    } // namespace config
+} // namespace game

@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -21,17 +21,20 @@
 #include "point.hpp"
 #include <string>
 
-namespace Utils {
+namespace utils {
 
-	struct ConsoleAbstract
-	{
-		virtual ~ConsoleAbstract() {}
+    struct console_abstract
+    {
+        virtual ~console_abstract() {}
 
-		virtual bool write(char character, const Utils::PointUInt & coordinate) = 0;
-		virtual bool write(const std::string & text, const PointUInt &coordinate, bool clearLine = true) = 0;
-		virtual bool clear(const Utils::PointUInt & coordinate, unsigned int length = 0) = 0;
-		virtual bool cursorAt(const Utils::PointUInt & coordinate) = 0;
-		virtual Utils::PointUInt size() const = 0;
-	};
+        virtual bool write(char character, const utils::point_uint & coordinate) = 0;
+        virtual bool write(const std::string & text,
+                           const point_uint & coordinate,
+                           bool clearLine = true) = 0;
 
-} // namespace Utils
+        virtual bool clear(const utils::point_uint & coordinate, unsigned int length = 0) = 0;
+        virtual bool cursor_at(const utils::point_uint & coordinate) = 0;
+        virtual utils::point_uint get_size() const = 0;
+    };
+
+} // namespace utils

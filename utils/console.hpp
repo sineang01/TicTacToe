@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -20,17 +20,18 @@
 #pragma once
 #include "console_abstract.hpp"
 
-namespace Utils {
+namespace utils {
 
-	class Console final
-	{
-	public:
-		static void init();
-		static void deinit();
-		static ConsoleAbstract * instance() { return m_pConsole; }
+    class console final
+    {
+      public:
+        static void initialize();
+        static void deinitialize();
 
-	private:
-		static ConsoleAbstract * m_pConsole;
-	};
+        static console_abstract * get_instance() { return m_pconsole; }
 
-}
+      private:
+        static console_abstract * m_pconsole;
+    };
+
+} // namespace utils

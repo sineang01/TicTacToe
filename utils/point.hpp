@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -19,137 +19,153 @@
 
 #pragma once
 
-namespace Utils {
+namespace utils {
 
-	template <typename T>
-	class Point final
-	{
-	public:
-		Point() :mX(0), mY(0) {}
-		Point(T x, T y) :mX(x), mY(y) {}
-		~Point() {}
+    template<typename T>
+    class point final
+    {
+      public:
+        point() = default;
+        point(T x, T y) : m_x(x), m_y(y) {}
 
-		inline T x() const { return mX; }
-		inline T y() const { return mY; }
-		inline void setX(T x) { mX = x; }
-		inline void setY(T y) { mY = y; }
+        inline T x() const noexcept { return m_x; }
+        inline T y() const noexcept { return m_y; }
+        inline void set_x(T x) noexcept { m_x = x; }
+        inline void set_y(T y) noexcept { m_y = y; }
 
-		inline T & rx() { return mX; }
-		inline T & ry() { return mY; }
+        inline T & rx() noexcept { return m_x; }
+        inline T & ry() noexcept { return m_y; }
 
-		inline Point<T> &operator+=(const Point<T> & p);
-		inline Point<T> &operator-=(const Point<T> & p);
-		inline Point<T> &operator*=(T c);
-		inline Point<T> &operator/=(T c);
+        inline point<T> & operator+=(const point<T> & p);
+        inline point<T> & operator-=(const point<T> & p);
+        inline point<T> & operator*=(T c);
+        inline point<T> & operator/=(T c);
 
-		template <class Y> friend inline bool operator==(const Point<T> & p1, const Point<T> & p2);
-		template <class Y> friend inline bool operator!=(const Point<T> & p1, const Point<T> & p2);
-		template <class Y> friend inline const Point<T> operator+(const Point<T> & p1, const Point<T> & p2);
-		template <class Y> friend inline const Point<T> operator-(const Point<T> & p1, const Point<T> & p2);
-		template <class Y> friend inline const Point<T> operator*(T c, const Point<T> & p);
-		template <class Y> friend inline const Point<T> operator*(const Point<T> &, T c);
-		template <class Y> friend inline const Point<T> operator+(const Point<T> & p);
-		template <class Y> friend inline const Point<T> operator-(const Point<T> &);
-		template <class Y> friend inline const Point<T> operator/(const Point<T> & p, T divisor);
+        template<class Y>
+        friend inline bool operator==(const point<T> & p1, const point<T> & p2);
 
-	private:
-		T mX;
-		T mY;
-	};
+        template<class Y>
+        friend inline bool operator!=(const point<T> & p1, const point<T> & p2);
 
-	// -------------------------------------------------------------
+        template<class Y>
+        friend inline const point<T> operator+(const point<T> & p1, const point<T> & p2);
 
-	using PointUInt = Point<unsigned int>;
-	using PointInt = Point<int>;
-	using PointFloat = Point<float>;
-	using PointDouble = Point<double>;
+        template<class Y>
+        friend inline const point<T> operator-(const point<T> & p1, const point<T> & p2);
 
-	// -------------------------------------------------------------
+        template<class Y>
+        friend inline const point<T> operator*(T c, const point<T> & p);
 
-	template <typename T>
-	Point<T> & Point<T>::operator+=(const Point & p)
-	{
-		mX += p.mX;
-		mY += p.mY;
-		return *this;
-	}
+        template<class Y>
+        friend inline const point<T> operator*(const point<T> &, T c);
 
-	template <typename T>
-	Point<T> & Point<T>::operator-=(const Point & p)
-	{
-		mX -= p.mX;
-		mY -= p.mY;
-		return *this;
-	}
+        template<class Y>
+        friend inline const point<T> operator+(const point<T> & p);
 
-	template <typename T>
-	Point<T> & Point<T>::operator*=(T c)
-	{
-		mX *= c;
-		mY *= c;
-		return *this;
-	}
+        template<class Y>
+        friend inline const point<T> operator-(const point<T> &);
 
-	template <typename T>
-	Point<T> & Point<T>::operator/=(T divisor)
-	{
-		mX /= divisor;
-		mY /= divisor;
-		return *this;
-	}
+        template<class Y>
+        friend inline const point<T> operator/(const point<T> & p, T divisor);
 
-	template <typename T>
-	bool operator==(const Point<T> & p1, const Point<T> & p2)
-	{
-		return p1.mX == p2.mX && p1.mY == p2.mY;
-	}
+      private:
+        T m_x{0};
+        T m_y{0};
+    };
 
-	template <typename T>
-	bool operator!=(const Point<T> & p1, const Point<T> & p2)
-	{
-		return p1.mX != p2.mX || p1.mY != p2.mY;
-	}
+    // -------------------------------------------------------------
 
-	template <typename T>
-	const Point<T> operator+(const Point<T> & p1, const Point<T> & p2)
-	{
-		return Point<T>(p1.mX + p2.mX, p1.mY + p2.mY);
-	}
+    using point_uint = point<unsigned int>;
+    using point_int = point<int>;
+    using point_float = point<float>;
+    using point_double = point<double>;
 
-	template <typename T>
-	const Point<T> operator-(const Point<T> & p1, const Point<T> & p2)
-	{
-		return Point<T>(p1.mX - p2.mX, p1.mY - p2.mY);
-	}
+    // -------------------------------------------------------------
 
-	template <typename T>
-	const Point<T> operator*(T c, const Point<T> & p)
-	{
-		return Point<T>(p.mX * c, p.mY * c);
-	}
+    template<typename T>
+    point<T> & point<T>::operator+=(const point & p)
+    {
+        m_x += p.m_x;
+        m_y += p.m_y;
+        return *this;
+    }
 
-	template <typename T>
-	const Point<T> operator*(const Point<T> & p, T c)
-	{
-		return Point<T>(p.mX * c, p.mY * c);
-	}
+    template<typename T>
+    point<T> & point<T>::operator-=(const point & p)
+    {
+        m_x -= p.m_x;
+        m_y -= p.m_y;
+        return *this;
+    }
 
-	template <typename T>
-	const Point<T> operator+(const Point<T> & p)
-	{
-		return p;
-	}
+    template<typename T>
+    point<T> & point<T>::operator*=(T c)
+    {
+        m_x *= c;
+        m_y *= c;
+        return *this;
+    }
 
-	template <typename T>
-	const Point<T> operator-(const Point<T> & p)
-	{
-		return Point<T>(-p.mX, -p.mX);
-	}
+    template<typename T>
+    point<T> & point<T>::operator/=(T divisor)
+    {
+        m_x /= divisor;
+        m_y /= divisor;
+        return *this;
+    }
 
-	template <typename T>
-	const Point<T> operator/(const Point<T> & p, T divisor)
-	{
-		return Point<T>(p.mX / divisor, p.mY / divisor);
-	}
+    template<typename T>
+    bool operator==(const point<T> & p1, const point<T> & p2)
+    {
+        return p1.m_x == p2.m_x && p1.m_y == p2.m_y;
+    }
 
-} // namespace Utils
+    template<typename T>
+    bool operator!=(const point<T> & p1, const point<T> & p2)
+    {
+        return p1.m_x != p2.m_x || p1.m_y != p2.m_y;
+    }
+
+    template<typename T>
+    const point<T> operator+(const point<T> & p1, const point<T> & p2)
+    {
+        return point<T>(p1.m_x + p2.m_x, p1.m_y + p2.m_y);
+    }
+
+    template<typename T>
+    const point<T> operator-(const point<T> & p1, const point<T> & p2)
+    {
+        return point<T>(p1.m_x - p2.m_x, p1.m_y - p2.m_y);
+    }
+
+    template<typename T>
+    const point<T> operator*(T c, const point<T> & p)
+    {
+        return point<T>(p.m_x * c, p.m_y * c);
+    }
+
+    template<typename T>
+    const point<T> operator*(const point<T> & p, T c)
+    {
+        return point<T>(p.m_x * c, p.m_y * c);
+    }
+
+    template<typename T>
+    const point<T> operator+(const point<T> & p)
+    {
+        return p;
+    }
+
+    template<typename T>
+    const point<T> operator-(const point<T> & p)
+    {
+        return point<T>(-p.m_x, -p.m_x);
+    }
+
+    template<typename T>
+    const point<T> operator/(const point<T> & p, T divisor)
+    {
+        return point<T>(p.m_x / divisor, p.m_y / divisor);
+    }
+
+} // namespace utils

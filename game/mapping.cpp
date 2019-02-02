@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,28 +17,26 @@
 **
 ****************************************************************************************/
 
-#include "stdafx.h"
+#include "../utils/utils.hpp"
 #include "mapping.hpp"
-#include <utils.hpp>
 
-namespace Game {
+namespace game {
 
-	PlayerSymbolMapping::PlayerSymbolMapping()
-	{
-		mMap[0] = Info(Symbol::Cross, 0xff0000);
-		mMap[1] = Info(Symbol::Circle, 0x0000ff);
-		mMap[2] = Info(Symbol::Tilde, 0x00ff00);
-		mMap[3] = Info(Symbol::At, 0xff00ff);
-		mMap[4] = Info(Symbol::Plus, 0x00ffff);
-		mMap[5] = Info(Symbol::Minus, 0xffff00);
-		//mMap size == PLAYER_MAP_SIZE
-	}
+    player_symbol_mapping::player_symbol_mapping()
+    {
+        m_map[0] = Info(symbol::Cross, 0xff0000);
+        m_map[1] = Info(symbol::Circle, 0x0000ff);
+        m_map[2] = Info(symbol::Tilde, 0x00ff00);
+        m_map[3] = Info(symbol::At, 0xff00ff);
+        m_map[4] = Info(symbol::Plus, 0x00ffff);
+        m_map[5] = Info(symbol::Minus, 0xffff00);
+        // m_map size == PLAYER_MAP_SIZE
+    }
 
-	const PlayerSymbolMapping::Info & PlayerSymbolMapping::player(size_t playerIndex) const
-	{
-		game_fatal_assert(playerIndex < PLAYER_MAP_SIZE);
-		return mMap[playerIndex];
-	}
+    const player_symbol_mapping::Info & player_symbol_mapping::get_player(size_t playerIndex) const
+    {
+        assert(playerIndex < PLAYER_MAP_SIZE);
+        return m_map[playerIndex];
+    }
 
-} // namespace Game
-
+} // namespace game

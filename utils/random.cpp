@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,4 +17,12 @@
 **
 ****************************************************************************************/
 
-#include "stdafx.h"
+#include "random.hpp"
+
+namespace utils {
+    namespace random {
+
+        std::mt19937 g_rng;
+
+    } // namespace random
+} // namespace utils

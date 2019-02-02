@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,30 +17,31 @@
 **
 ****************************************************************************************/
 
-#include "stdafx.h"
 #include "console.hpp"
 #include "console_windows.hpp"
 
-namespace Utils {
+namespace utils {
 
-	ConsoleAbstract * Console::m_pConsole = nullptr;
+    utils::console_abstract * console::m_pconsole = nullptr;
 
-	void Console::init()
-	{
-		if (m_pConsole)
-			return;
+    void console::initialize()
+    {
+        if (m_pconsole != nullptr)
+        {
+            return;
+        }
 
 #ifdef _WIN32
-		m_pConsole = new ConsoleWindows();
+        m_pconsole = new console_windows();
 #else
-		static_assert(false, "Implement a console for this platform!");
+        static_assert(false, "Implement a console for this platform!");
 #endif
-	}
+    }
 
-	void Console::deinit()
-	{
-		delete m_pConsole;
-		m_pConsole = nullptr;
-	}
+    void console::deinitialize()
+    {
+        delete m_pconsole;
+        m_pconsole = nullptr;
+    }
 
-} // namespace Utils
+} // namespace utils

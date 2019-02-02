@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -20,32 +20,35 @@
 #pragma once
 #ifdef _WIN32
 
-#include "point.hpp"
-#include "console_abstract.hpp"
-#include <string>
+#    include "console_abstract.hpp"
+#    include "point.hpp"
+#    include <string>
 
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN 
-#include <Windows.h>
+#    define NOMINMAX
+#    define WIN32_LEAN_AND_MEAN
+#    include <Windows.h>
 
-namespace Utils {
+namespace utils {
 
-	class ConsoleWindows final : public ConsoleAbstract
-	{
-	public:
-		ConsoleWindows();
-		~ConsoleWindows();
+    class console_windows final : public console_abstract
+    {
+      public:
+        console_windows();
+        ~console_windows() override;
 
-		bool write(char character, const Utils::PointUInt & coordinate) override final;
-		bool write(const std::string & text, const PointUInt &coordinate, bool clearLine = true) override final;
-		bool clear(const Utils::PointUInt & coordinate, unsigned int length = 0) override final;
-		bool cursorAt(const Utils::PointUInt & coordinate) override final;
-		Utils::PointUInt size() const override final;
+        bool write(char character, const utils::point_uint & coordinate) override;
+        bool write(const std::string & text,
+                   const point_uint & coordinate,
+                   bool clearLine = true) override;
 
-	private:
-		HANDLE mHandle;
-	};
+        bool clear(const utils::point_uint & coordinate, unsigned int length = 0) override;
+        bool cursor_at(const utils::point_uint & coordinate) override;
+        utils::point_uint get_size() const override;
 
-} // namespace Utils
+      private:
+        HANDLE m_handle;
+    };
+
+} // namespace utils
 
 #endif // _WIN32

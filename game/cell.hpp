@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -18,41 +18,46 @@
 ****************************************************************************************/
 
 #pragma once
-#include "symbols.hpp"
 #include "player.hpp"
+#include "symbols.hpp"
 
-namespace Game {
+namespace game {
 
-	/**
-	 * @brief The Cell class is the container of a single cell grid for TicTacToe
-	 */
-	class Cell final
-	{
-	public:
-		Cell() :mpPlayer(nullptr), mLocked(false) {}
+    /**
+     * @brief The cell class is the container of a single cell grid for TicTacToe
+     */
+    class cell final
+    {
+      public:
+        inline void set_free() noexcept
+        {
+            m_pplayer = nullptr;
+            m_locked = false;
+        }
 
-		void setFree() { mpPlayer = nullptr; mLocked = false; }
-		bool free() const { return !mpPlayer && !mLocked; }
+        inline bool get_free() const { return !m_pplayer && !m_locked; }
 
-		void setOwner(const Player * pPlayer) { mpPlayer = pPlayer; }
-		const Player * owner() const { return mpPlayer; }
+        inline void set_owner(const player * pPlayer) noexcept { m_pplayer = pPlayer; }
+        inline const player * get_owner() const noexcept { return m_pplayer; }
 
-		inline void setLocked(bool locked) { mLocked = locked; }
-		inline bool locked() const { return mLocked; }
+        inline void set_locked(bool get_locked) noexcept { m_locked = get_locked; }
+        inline bool get_locked() const noexcept { return m_locked; }
 
-		inline Symbol symbol() const;
+        inline symbol get_symbol() const noexcept;
 
-	private:
-		const Player * mpPlayer;
-		bool mLocked;
-	};
+      private:
+        const player * m_pplayer{nullptr};
+        bool m_locked{false};
+    };
 
-	Symbol Cell::symbol() const
-	{
-		if (mpPlayer)
-			return mpPlayer->symbolOwned();
+    symbol cell::get_symbol() const noexcept
+    {
+        if (m_pplayer)
+            return m_pplayer->get_symbol_owned();
 
-		return mLocked ? Symbol::Unavaiable : Symbol::None;
-	}
+        return m_locked ? symbol::Unavaiable : symbol::None;
+    }
 
-} // namespace Game
+    using CellList = std::vector<cell>;
+
+} // namespace game

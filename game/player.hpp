@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -20,36 +20,35 @@
 #pragma once
 #include "symbols.hpp"
 
-namespace Game {
+namespace game {
 
-	class Player final
-	{
-	public:
-		Player() :mSymbol(Symbol::None), mScore(0), mClass(Class::Human) {}
-		~Player() {}
+    class player final
+    {
+      public:
+        inline void set_symbol_owned(symbol type) noexcept { m_symbol = type; }
+        inline symbol get_symbol_owned() const noexcept { return m_symbol; }
 
-		inline void setSymbolOwned(Symbol type) { mSymbol = type; }
-		inline Symbol symbolOwned() const { return mSymbol; }
+        inline void increase_score() noexcept { ++m_score; }
+        inline void reset_score() noexcept { m_score = 0; }
+        inline unsigned int get_score() const noexcept { return m_score; }
 
-		inline void increaseScore() { ++mScore; }
-		inline void resetScore() { mScore = 0; }
-		inline unsigned int score() const { return mScore; }
+        void set_human(bool is_human) noexcept { m_class = is_human ? Class::Human : Class::AI; }
+        bool is_human() const noexcept { return m_class == Class::Human; }
+        bool is_ai() const noexcept { return m_class == Class::AI; }
 
-		void setHuman(bool human) { mClass = human ? Class::Human : Class::AI; }
-		bool human() const { return mClass == Class::Human; }
-		bool ai() const { return mClass == Class::AI; }
+      private:
+        enum class Class
+        {
+            Human,
+            AI
+        };
 
-	private:
-		enum class Class
-		{
-			Human,
-			AI
-		};
+      private:
+        symbol m_symbol{symbol::None};
+        unsigned int m_score{0};
+        Class m_class{Class::Human};
+    };
 
-	private:
-		Symbol mSymbol;
-		unsigned int mScore;
-		Class mClass;
-	};
+    using PlayerList = std::vector<player>;
 
-} // namespace Game
+} // namespace game

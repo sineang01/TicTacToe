@@ -1,5 +1,5 @@
 /****************************************************************************************
-** Copyright (C) 2016-2018 Simone Angeloni
+** Copyright (C) 2016-2019 Simone Angeloni
 ** This file is part of Tic Tac Toe.
 **
 ** Tic Tac Toe is free software: you can redistribute it and/or modify
@@ -17,78 +17,85 @@
 **
 ****************************************************************************************/
 
-#include "stdafx.h"
 #include "utils.hpp"
 
 #ifdef _WIN32
-#include "console_windows.hpp"
+#    include "console_windows.hpp"
 
-namespace Utils {
+namespace utils {
 
-	ConsoleWindows::ConsoleWindows()
-		:mHandle(GetStdHandle(STD_OUTPUT_HANDLE))
-	{
-		game_fatal_assert(mHandle != INVALID_HANDLE_VALUE);
-	}
+    console_windows::console_windows() : m_handle(GetStdHandle(STD_OUTPUT_HANDLE))
+    {
+        assert(m_handle != INVALID_HANDLE_VALUE);
+    }
 
-	ConsoleWindows::~ConsoleWindows()
-	{
-	}
+    console_windows::~console_windows() = default;
 
-	bool ConsoleWindows::write(char character, const Utils::PointUInt & coordinate)
-	{
-		DWORD charsWritten = 0;
-		COORD coord = { static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y()) };
+    bool console_windows::write(char character, const utils::point_uint & coordinate)
+    {
+        DWORD chars_written{0};
+        COORD coord = {static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y())};
 
-		static std::string s;
-		s = character;
+        static std::string s_s;
+        s_s = character;
 
-		WriteConsoleOutputCharacterA(mHandle, s.c_str(), 1, coord, &charsWritten);
-		return charsWritten == 1;
-	}
+        WriteConsoleOutputCharacterA(m_handle, s_s.c_str(), 1, coord, &chars_written);
+        return chars_written == 1;
+    }
 
-	bool ConsoleWindows::write(const std::string & text, const Utils::PointUInt & coordinate, bool clearLine)
-	{
-		DWORD charsWritten = 0;
-		COORD coord = { static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y()) };
+    bool console_windows::write(const std::string & text,
+                                const utils::point_uint & coordinate,
+                                bool clearLine)
+    {
+        DWORD chars_written{0};
+        COORD coord = {static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y())};
 
-		if (clearLine)
-			clear(coordinate, 80 - coordinate.x());
+        if (clearLine)
+        {
+            clear(coordinate, 80 - coordinate.x());
+        }
 
-		WriteConsoleOutputCharacterA(mHandle, text.c_str(), static_cast<DWORD>(text.length()), coord, &charsWritten);
-		return charsWritten == text.length();
-	}
+        WriteConsoleOutputCharacterA(m_handle,
+                                     text.c_str(),
+                                     static_cast<DWORD>(text.length()),
+                                     coord,
+                                     &chars_written);
 
-	bool ConsoleWindows::clear(const Utils::PointUInt & coordinate, unsigned int length)
-	{
-		DWORD charsWritten = 0;
-		COORD coord = { static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y()) };
+        return chars_written == text.length();
+    }
 
-		if (length == 0)
-			length = size().x() - coordinate.x();
+    bool console_windows::clear(const utils::point_uint & coordinate, unsigned int length)
+    {
+        DWORD chars_written{0};
+        COORD coord = {static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y())};
 
-		FillConsoleOutputCharacter(mHandle, ' ', length, coord, &charsWritten);
-		return charsWritten == length;
-	}
+        if (length == 0)
+        {
+            length = get_size().x() - coordinate.x();
+        }
 
-	bool ConsoleWindows::cursorAt(const Utils::PointUInt & coordinate)
-	{
-		COORD coord = { static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y()) };
-		return SetConsoleCursorPosition(mHandle, coord) != 0;
-	}
+        FillConsoleOutputCharacter(m_handle, ' ', length, coord, &chars_written);
+        return chars_written == length;
+    }
 
-	Utils::PointUInt ConsoleWindows::size() const
-	{
-		CONSOLE_SCREEN_BUFFER_INFO info;
-		Utils::PointUInt point;
+    bool console_windows::cursor_at(const utils::point_uint & coordinate)
+    {
+        COORD coord = {static_cast<short>(coordinate.x()), static_cast<short>(coordinate.y())};
+        return SetConsoleCursorPosition(m_handle, coord) != 0;
+    }
 
-		GetConsoleScreenBufferInfo(mHandle, &info);
-		point.ry() = info.srWindow.Right - info.srWindow.Left + 1;
-		point.rx() = info.srWindow.Bottom - info.srWindow.Top + 1;
+    utils::point_uint console_windows::get_size() const
+    {
+        CONSOLE_SCREEN_BUFFER_INFO info;
+        utils::point_uint point;
 
-		return point;
-	}
+        GetConsoleScreenBufferInfo(m_handle, &info);
+        point.ry() = static_cast<unsigned int>(info.srWindow.Right - info.srWindow.Left + 1);
+        point.rx() = static_cast<unsigned int>(info.srWindow.Bottom - info.srWindow.Top + 1);
 
-} // namespace Utils
+        return point;
+    }
+
+} // namespace utils
 
 #endif // _WIN32
