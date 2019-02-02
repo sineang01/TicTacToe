@@ -3,6 +3,8 @@ Tic Tac Toe
 
 Tic Tac Toe 1.0 is a C++11 console implementation of the classic game also known as noughts and crosses.
 
+![Tic Tac Toe](https://i.ibb.co/V91gmQr/ttt.png)
+
 Info
 ====
 
