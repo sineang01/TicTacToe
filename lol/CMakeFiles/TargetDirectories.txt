@@ -1,0 +1,3 @@
+/TicTacToe/lol/CMakeFiles/rebuild_cache.dir
+/TicTacToe/lol/CMakeFiles/TicTacToe.dir
+/TicTacToe/lol/CMakeFiles/edit_cache.dir

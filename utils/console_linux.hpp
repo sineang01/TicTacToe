@@ -17,34 +17,31 @@
 **
 ****************************************************************************************/
 
-#include "console.hpp"
-#include "console_windows.hpp"
-#include "console_linux.hpp"
+#pragma once
+#ifdef __linux__
+
+#    include "console_abstract.hpp"
+#    include "point.hpp"
+#    include <string>
 
 namespace utils {
 
-    utils::console_abstract * console::m_pconsole = nullptr;
-
-    void console::initialize()
+    class console_linux final : public console_abstract
     {
-        if (m_pconsole != nullptr)
-        {
-            return;
-        }
+      public:
+        console_linux();
+        ~console_linux() override;
 
-#ifdef _WIN32
-        m_pconsole = new console_windows();
-#elif __linux__
-        m_pconsole = new console_linux();
-#else
-        static_assert(false, "Implement a console for this platform!");
-#endif
-    }
+        bool write(char character, const utils::point_uint & coordinate) override;
+        bool write(const std::string & text,
+                   const point_uint & coordinate,
+                   bool clearLine = true) override;
 
-    void console::deinitialize()
-    {
-        delete m_pconsole;
-        m_pconsole = nullptr;
-    }
+        bool clear(const utils::point_uint & coordinate, unsigned int length = 0) override;
+        bool cursor_at(const utils::point_uint & coordinate) override;
+        utils::point_uint get_size() const override;
+    };
 
 } // namespace utils
+
+#endif // __linux__
