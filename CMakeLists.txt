@@ -26,6 +26,8 @@ set (SOURCES_DIR_UTILS
 	utils/console_abstract.hpp
 	utils/console_windows.cpp
 	utils/console_windows.hpp
+	utils/console_linux.cpp
+	utils/console_linux.hpp
 	utils/point.hpp
 	utils/random.cpp
 	utils/random.hpp

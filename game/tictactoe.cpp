@@ -28,6 +28,17 @@
 
 namespace game {
 
+    constexpr unsigned int tic_tac_toe::BOARD_CELL_WIDTH;
+    constexpr unsigned int tic_tac_toe::BOARD_CELL_HEIGHT;
+    constexpr unsigned int tic_tac_toe::BOARD_CELL_SEPARATOR_H;
+    constexpr unsigned int tic_tac_toe::BOARD_OFFSET_LEFT;
+    constexpr unsigned int tic_tac_toe::BOARD_OFFSET_RIGHT;
+    constexpr unsigned int tic_tac_toe::BOARD_OFFSET_TOP;
+    constexpr unsigned int tic_tac_toe::BOARD_OFFSET_BOTTOM;
+
+    constexpr unsigned int tic_tac_toe::TIMER_AI_THINKING_MSECS;
+    constexpr unsigned int tic_tac_toe::TIMER_GAME_OVER_MSECS;
+
     tic_tac_toe::tic_tac_toe(const game::tic_tac_toe::game_params & gameParams)
         : m_game_params(gameParams)
     {}

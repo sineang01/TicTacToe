@@ -20,53 +20,60 @@
 #include "utils.hpp"
 
 #ifdef __linux__
+#    include "console_linux.hpp"
 #    include <sys/ioctl.h>
 #    include <unistd.h>
-#    include "console_linux.hpp"
 
 namespace utils {
 
-    console_linux::console_linux() = default;
-    console_linux::~console_linux() = default;
+    console_linux::console_linux() {}
+
+    console_linux::~console_linux() {}
 
     bool console_linux::write(char character, const utils::point_uint & coordinate)
     {
-	printf("\033[%d;%dH%c\n", cordinate.y() + 1, coordinate.y() + 1, character);
+        printf("\033[%d;%dH%c\n", coordinate.y() + 1, coordinate.y() + 1, character);
         return true;
     }
 
     bool console_linux::write(const std::string & text,
-                                const utils::point_uint & coordinate,
-                                bool clearLine)
+                              const utils::point_uint & coordinate,
+                              bool clearLine)
     {
         if (clearLine)
         {
-		// TODO
-		//clear(coordinate, 80 - coordinate.x());
+            // TODO
+            // clear(coordinate, 80 - coordinate.x());
         }
 
-	printf("\033[%d;%dH%s\n", cordinate.y() + 1, coordinate.y() + 1, text.c_str());
-	return true;
+        printf("\033[%d;%dH%s\n", coordinate.y() + 1, coordinate.y() + 1, text.c_str());
+        return true;
     }
 
     bool console_linux::clear(const utils::point_uint & coordinate, unsigned int length)
     {
-	printf("\033[H\033[J")
+        // TODO
+        if (!cursor_at(coordinate))
+            return false;
+
+        for (unsigned int i = 0; i < length; ++i)
+            printf(' ');
+        //printf("\033[H\033[J");
         return true;
     }
 
     bool console_linux::cursor_at(const utils::point_uint & coordinate)
     {
-	printf("\033[%d;%dH", cordinate.y() + 1, coordinate.y() + 1);
-	return true;
+        printf("\033[%d;%dH", coordinate.y() + 1, coordinate.y() + 1);
+        return true;
     }
 
     utils::point_uint console_linux::get_size() const
     {
-	struct winsize size;
+        struct winsize size;
         utils::point_uint point;
 
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
         point.ry() = static_cast<unsigned int>(size.ws_row);
         point.rx() = static_cast<unsigned int>(size.ws_col);
 

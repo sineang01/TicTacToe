@@ -97,16 +97,16 @@ namespace game {
         unsigned int m_current_player{0};
 
       private:
-        static const unsigned int BOARD_CELL_WIDTH{5};
-        static const unsigned int BOARD_CELL_HEIGHT{3};
-        static const unsigned int BOARD_CELL_SEPARATOR_H{1};
-        static const unsigned int BOARD_OFFSET_LEFT{5};
-        static const unsigned int BOARD_OFFSET_RIGHT{2};
-        static const unsigned int BOARD_OFFSET_TOP{3};
-        static const unsigned int BOARD_OFFSET_BOTTOM{1};
+        static constexpr unsigned int BOARD_CELL_WIDTH{ 5 };
+        static constexpr unsigned int BOARD_CELL_HEIGHT{ 3 };
+        static constexpr unsigned int BOARD_CELL_SEPARATOR_H{ 1 };
+        static constexpr unsigned int BOARD_OFFSET_LEFT{ 5 };
+        static constexpr unsigned int BOARD_OFFSET_RIGHT{ 2 };
+        static constexpr unsigned int BOARD_OFFSET_TOP{ 3 };
+        static constexpr unsigned int BOARD_OFFSET_BOTTOM{ 1 };
 
-        static const unsigned int TIMER_AI_THINKING_MSECS{500};
-        static const unsigned int TIMER_GAME_OVER_MSECS{2500};
+        static constexpr unsigned int TIMER_AI_THINKING_MSECS{ 500 };
+        static constexpr unsigned int TIMER_GAME_OVER_MSECS{ 2500 };
     };
 
 } // namespace game
